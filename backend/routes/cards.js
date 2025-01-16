@@ -34,6 +34,7 @@ router.post('/', function (req, res) {
     });
 });
 
+//päivittää kortin id:n perusteella (pitäiskö vaihtaa kortin numeron perusteiseksi?)
 router.put('/:idcard', function (req, res) {
     cards.update(req.params.idcard, req.body, function (err, result) {
         if(err){
@@ -43,5 +44,17 @@ router.put('/:idcard', function (req, res) {
         }
     });
 });        
+
+//poistaa kortin id:n perusteella (pitäiskö taas vaihtaa kortin numeron perusteiseksi?)
+router.delete('/:idcard', function (req, res) {
+    cards.delete(req.params.idcard, function (err, result) {
+        if(err){
+            res.json(err);
+        } else {
+            res.json(result);
+        }
+    });
+});
+
 
 module.exports = router;
