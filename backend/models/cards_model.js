@@ -19,11 +19,16 @@ const cards = {
                 cards_data.cardnumber], callback);
         })
     },
-    update: function (id, cards_data, callback) {
+    //kortin tietojen päivitys id:n perusteella
+    update: function (id, update_cards_data, callback) {
         bcrypt.hash(cards_data.pinhash, 10, function (err, hashed_pinhash) {
             return db.query("UPDATE cards SET cardtype=?, pinhash=?, islocked=?, credit_limit=? WHERE idcard=?",
-                [cards_data.cardtype, hashed_pinhash, cards_data.islocked, cards_data.credit_limit, id], callback);
+                [update_cards_data.cardtype, hashed_pinhash, update_cards_data.islocked, update_cards_data.credit_limit, id], callback);
         })
+    },
+    //kortin poisto id:n perusteella
+    delete: function (id, callback) {
+        return db.query("DELETE FROM cards WHERE idcard=?", [id], callback);
     }
 }
 
