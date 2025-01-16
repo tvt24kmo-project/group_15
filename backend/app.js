@@ -6,6 +6,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/customers');
 var cardsRouter = require('./routes/cards');
+var transactionsRouter = require('./routes/transactions');
 
 
 var app = express();
@@ -21,6 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/customers', usersRouter);
 app.use('/cards', cardsRouter);
+app.use('/transactions', transactionsRouter);
 
 app.use((req, res, next) => {
     console.log(`Incoming request: ${req.method} ${req.path}`);
