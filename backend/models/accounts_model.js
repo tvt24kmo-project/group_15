@@ -4,8 +4,8 @@ const accounts = {
     // Lisää uusi tili tietokantaan
     addAccount: function (account, callback) {
         return db.query(
-            "INSERT INTO accounts (idaccount, customer_id, balance, accountiban) VALUES (?, ?, ?, ?)", 
-            [account.idaccount, account.customer_id, account.balance, account.accountiban], 
+            "INSERT INTO accounts (customer_id, balance, accountiban) VALUES (?, ?, ?)", 
+            [account.customer_id, account.balance, account.accountiban], 
             callback
         );
     },
@@ -16,8 +16,8 @@ const accounts = {
     // Päivitä tili id:n perusteella
     updateAccount: function (account, id, callback) {
         return db.query(
-            "UPDATE accounts SET idaccount=?, customer_id=?, balance=?, accountiban=? WHERE idaccount=?", 
-            [account.idaccount, account.customer_id, account.balance, account.accountiban, id], 
+            "UPDATE accounts SET customer_id=?, balance=?, accountiban=? WHERE idaccount=?", 
+            [account.customer_id, account.balance, account.accountiban, id], 
             callback
         );
     },
