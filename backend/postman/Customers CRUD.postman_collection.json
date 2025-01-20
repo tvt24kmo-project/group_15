@@ -1,0 +1,123 @@
+{
+	"info": {
+		"_postman_id": "363207d5-26b3-44cd-9087-9dbec4c9a7c1",
+		"name": "Customers CRUD",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41195001"
+	},
+	"item": [
+		{
+			"name": "addCustomer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "fname",
+							"value": "Teppo",
+							"type": "text"
+						},
+						{
+							"key": "lname",
+							"value": "Testi2",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": "Jokukatu 2",
+							"type": "text"
+						},
+						{
+							"key": "city",
+							"value": "Oulu",
+							"type": "text"
+						},
+						{
+							"key": "postalcode",
+							"value": "90100",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/customers",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"customers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAll",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{base_url}}/customers",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"customers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteCustomer",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{base_url}}/customers/1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"customers",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
