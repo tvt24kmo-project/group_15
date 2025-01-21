@@ -17,7 +17,8 @@ MainWindow::MainWindow(QWidget *parent)
     // haetaan kuva backendistä
     QString filename = "mainwindow.png"; // joustava tapa hakea kuvia backendistä
     QString url = "http://localhost:3000/images/" + filename; // kuvan sijainti ja nimi muuttujasta
-    imageFetcher->fetchImage(QUrl(url)); } // kutsutaan fetchImage funktiota ja annetaan url parametrina
+    imageFetcher->fetchImage(QUrl(url));
+} // kutsutaan fetchImage funktiota ja annetaan url parametrina
 
 MainWindow::~MainWindow()
 {
