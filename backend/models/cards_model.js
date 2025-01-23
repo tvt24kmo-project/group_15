@@ -14,16 +14,15 @@ const cards = {
     //kortin salasanan kryptaus
     add: function (cards_data, callback) {
         bcrypt.hash(cards_data.pinhash, 10, function (err, hashed_pinhash) {
-            return db.query("INSERT INTO cards(cardtype, pinhash, islocked, credit_limit, cardnumber) values(?,?,?,?,?)",
-                [cards_data.cardtype, hashed_pinhash, cards_data.islocked, cards_data.credit_limit,
-                cards_data.cardnumber], callback);
+            return db.query("INSERT INTO cards(cardtype, pinhash, islocked, cardnumber) values(?,?,?,?)",
+                [cards_data.cardtype, hashed_pinhash, cards_data.islocked, cards_data.cardnumber], callback);
         })
     },
     //kortin tietojen päivitys id:n perusteella
     update: function (id, update_cards_data, callback) {
-        bcrypt.hash(cards_data.pinhash, 10, function (err, hashed_pinhash) {
-            return db.query("UPDATE cards SET cardtype=?, pinhash=?, islocked=?, credit_limit=? WHERE idcard=?",
-                [update_cards_data.cardtype, hashed_pinhash, update_cards_data.islocked, update_cards_data.credit_limit, id], callback);
+        bcrypt.hash(update_cards_data.pinhash, 10, function (err, hashed_pinhash) {
+            return db.query("UPDATE cards SET cardtype=?, pinhash=?, islocked=? WHERE idcard=?",
+                [update_cards_data.cardtype, hashed_pinhash, update_cards_data.islocked, id], callback);
         })
     },
     //kortin poisto id:n perusteella
