@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "imagefetcher.h" // käytetään kuvan noutamiseen tehtyä luokkaa
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -17,7 +18,15 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    // nämä slotit kuuntelee ImageFetcherin signaaleja
+    void onImageFetched(const QPixmap &pixmap); // slot onImageFetched joka ottaa QPixmapin parametrina ja asettaa sen labeliin 
+    void onFetchFailed(const QString &error); // slot onFetchFailed joka ottaa QStringin parametrina ja asettaa sen labeliin 
+
 private:
     Ui::MainWindow *ui;
+    ImageFetcher *imageFetcher; // luodaan olio luokasta ImageFetcher
 };
+
+
 #endif // MAINWINDOW_H
