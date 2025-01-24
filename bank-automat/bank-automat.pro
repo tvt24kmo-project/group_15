@@ -10,14 +10,17 @@ CONFIG += c++17
 
 SOURCES += \
     imagefetcher.cpp \
+    login.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     imagefetcher.h \
+    login.h \
     mainwindow.h
 
 FORMS += \
+    login.ui \
     mainwindow.ui
 
 # Default rules for deployment.

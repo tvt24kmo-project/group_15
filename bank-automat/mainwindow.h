@@ -20,8 +20,14 @@ public:
 
 private slots:
     // nämä slotit kuuntelee ImageFetcherin signaaleja
-    void onImageFetched(const QPixmap &pixmap); // slot onImageFetched joka ottaa QPixmapin parametrina ja asettaa sen labeliin 
-    void onFetchFailed(const QString &error); // slot onFetchFailed joka ottaa QStringin parametrina ja asettaa sen labeliin 
+    void onImageFetched(const QPixmap &pixmap); // slot onImageFetched joka ottaa QPixmapin parametrina ja asettaa sen labeliin
+    void onFetchFailed(const QString &error); // slot onFetchFailed joka ottaa QStringin parametrina ja asettaa sen labeliin
+
+    void on_buttonLogin_clicked();
+
+    void on_pushButton_clicked();
+
+    void on_buttonStart_clicked();
 
 private:
     Ui::MainWindow *ui;

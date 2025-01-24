@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <Login.h>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -36,3 +38,12 @@ void MainWindow::onFetchFailed(const QString &error) // jos haku epäonnistuu ni
 {
     ui->labelMainWindowImg->setText("Kuvan haku epäonnistui: " + error); // jos kuva ei lataudu niin asetetaan labeliin virheilmoitus (siiretäänkö QDebugiin mieluummin??)
 }
+
+
+void MainWindow::on_buttonStart_clicked()
+{
+    //Aloita-painiketta painettu
+    Login *objLogin=new Login(this);
+    objLogin->open();
+}
+

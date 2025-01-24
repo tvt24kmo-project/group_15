@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>600</width>
+    <height>420</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,8 +17,8 @@
    <widget class="QLabel" name="labelMainWindowImg">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>0</y>
+      <x>20</x>
+      <y>20</y>
       <width>791</width>
       <height>551</height>
      </rect>
@@ -32,44 +32,23 @@
      <string>TextLabel</string>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QPushButton" name="buttonStart">
     <property name="geometry">
      <rect>
-      <x>446</x>
-      <y>170</y>
-      <width>351</width>
-      <height>161</height>
+      <x>210</x>
+      <y>130</y>
+      <width>191</width>
+      <height>81</height>
      </rect>
     </property>
-    <layout class="QFormLayout" name="loginFormLayout">
-     <item row="0" column="0">
-      <widget class="QLabel" name="labelUsername">
-       <property name="text">
-        <string>Käyttäjänimi</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="lineEditUsername"/>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="labelPassword">
-       <property name="text">
-        <string>Salasana</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="lineEditPassword"/>
-     </item>
-     <item row="2" column="1">
-      <widget class="QPushButton" name="buttonLogin">
-       <property name="text">
-        <string>Kirjaudu</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    <property name="font">
+     <font>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Aloita</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -77,8 +56,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
-     <height>22</height>
+     <width>600</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>
