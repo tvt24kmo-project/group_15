@@ -57,4 +57,16 @@ router.delete('/:idcard', function (req, res) {
 });
 
 
+router.put("/update-card-attempts/:idcard", function (req, res) {
+    cards.updateWrongAttempt(req.body.wrong_attempts, req.params.idcard, function (err, result) {
+        if (err) {
+            res.json(err);
+        } else {
+            res.json(result);
+        }
+    });
+});
+
+
+
 module.exports = router;

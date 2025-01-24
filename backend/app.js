@@ -8,7 +8,7 @@ var usersRouter = require('./routes/customers');
 var cardsRouter = require('./routes/cards');
 var transactionsRouter = require('./routes/transactions');
 var accountsRouter = require('./routes/accounts');
-
+var proceduresRouter = require('./routes/procedures');
 
 var app = express(); 
 
@@ -25,6 +25,7 @@ app.use('/customers', usersRouter);
 app.use('/cards', cardsRouter);
 app.use('/transactions', transactionsRouter);
 app.use('/accounts', accountsRouter);
+app.use('/procedures', proceduresRouter);
 
 app.use((req, res, next) => {
     console.log(`Incoming request: ${req.method} ${req.path}`);
