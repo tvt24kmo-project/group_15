@@ -68,5 +68,47 @@ router.put("/update-card-attempts/:idcard", function (req, res) {
 });
 
 
+router.post('/testLocking/:idcard', function (req, res) {
+    const attempts = req.body.attempts;
+    if (attempts === undefined) {
+      return res.status(400).json({ error: 'No attempts provided' });
+    }
+  
+    cards.updateWrongAttempt(attempts, req.params.idcard, function (err, result) {
+      if (err) {
+        return res.json(err);
+      }
+  
+      if (attempts >= 3) {
+        // Lock the card if attempts >= 3
+        const db = require('../database'); // or wherever db is imported
+        db.query(
+          "UPDATE cards SET islocked=1 WHERE idcard=?",
+          [req.params.idcard],
+          function (errLock, lockResult) {
+            if (errLock) {
+              return res.json(errLock);
+            }
+            res.json({ message: 'Card locked', result: lockResult });
+          }
+        );
+      } else {
+        res.json({ message: 'Attempts updated', result });
+      }
+    });
+  });
 
-module.exports = router;
+
+
+router.post("/update-card-attempts/:idcard", function (req, res) {
+    cards.updateWrongAttempt(req.body.wrong_attempts, req.params.idcard, function (err, result) {
+        if (err) {
+            res.json(err);
+        } else {
+            res.json(result);
+        }
+    });
+});
+
+
+module.exports = router;    

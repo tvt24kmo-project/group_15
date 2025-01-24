@@ -34,7 +34,9 @@ const cards = {
     //kortin väärän yrityksen päivitys id:n perusteella
     updateWrongAttempt: function(wrong_attempts, id, callback) {
         return db.query("UPDATE cards SET wrong_attempts=? WHERE idcard=?", [wrong_attempts, id], callback);
-    }
+    },
+
+    
 }
 
 module.exports = cards;
