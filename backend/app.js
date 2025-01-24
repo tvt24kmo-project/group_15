@@ -10,7 +10,7 @@ var transactionsRouter = require('./routes/transactions');
 var accountsRouter = require('./routes/accounts');
 
 
-var app = express();
+var app = express(); 
 
 app.use(logger('dev'));
 app.use(express.json());
