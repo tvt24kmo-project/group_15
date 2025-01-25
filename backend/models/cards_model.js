@@ -33,7 +33,7 @@ const cards = {
     //kortin salasanan tarkistus
     checkPassword: function(cardnumber, callback) {
         return db.query("SELECT pinhash FROM cards WHERE cardnumber=?", [cardnumber], callback);
-    }
+    },
 
     //kortin väärän yrityksen päivitys id:n perusteella
     updateWrongAttempt: function(wrong_attempts, id, callback) {
