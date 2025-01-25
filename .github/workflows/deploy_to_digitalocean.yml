@@ -11,27 +11,19 @@ jobs:
   deploy:
     runs-on: self-hosted
 
-    # checkout code 
     steps:
     - name: checkout repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
-    # install deps
     - name: install nodejs dependencies
-      run: |
-        cd backend 
-        npm install
+      working-directory: ./backend
+      run: npm install
 
-    # restart nodejs server
-    - name: restart node.js app
+    - name: Restart Node.js application
       run: |
-        pm2 stop all || true
-        pm2 start backend/app.js --name backend
+        pm2 restart backend || pm2 start backend/app.js --name backend
 
-
-    # ensure apache proxy is running
-    - name: Restart apache
-      run: |
-        sudo systemctl restart apache2
+    - name: Restart Apache
+      run: sudo systemctl restart apache2
 
 
