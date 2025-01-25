@@ -12,15 +12,15 @@ jobs:
     runs-on: self-hosted
 
     steps:
-    - name: checkout repo
-      uses: actions/checkout@v4
-
     - name: Backup .env file
       run: |
         REPO_DIR="/home/jesse/actions-runner/_work/group_15/group_15"
         if [ -f $REPO_DIR/backend/.env ]; then
             cp $REPO_DIR/backend/.env /tmp/env_backup
         fi
+
+    - name: checkout repo
+      uses: actions/checkout@v4
 
     - name: install nodejs dependencies
       working-directory: ./backend
@@ -37,8 +37,5 @@ jobs:
       run: |
         pm2 restart backend || pm2 start backend/app.js --name backend
 
-
     - name: Restart Apache
       run: sudo systemctl restart apache2
-
-
