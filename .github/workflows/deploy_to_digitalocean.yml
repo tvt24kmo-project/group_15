@@ -6,7 +6,6 @@ on:
       - "backend/**"
       - ".github/workflows/deploy_to_digitalocean.yml"
 
-
 jobs:
   deploy:
     runs-on: self-hosted
@@ -19,10 +18,10 @@ jobs:
             cp $REPO_DIR/backend/.env /tmp/env_backup
         fi
 
-    - name: checkout repo
+    - name: Checkout repo
       uses: actions/checkout@v4
 
-    - name: install nodejs dependencies
+    - name: Install Node.js dependencies
       working-directory: ./backend
       run: npm install
 
@@ -35,7 +34,7 @@ jobs:
 
     - name: Restart Node.js application
       run: |
-        pm2 restart backend || pm2 start backend/app.js --name backend
+        pm2 restart backend || (pm2 start backend/app.js --name backend && pm2 save)
 
     - name: Restart Apache
       run: sudo systemctl restart apache2
