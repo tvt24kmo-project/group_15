@@ -44,7 +44,7 @@ Projektiryhmä koostuu seuraavista henkilöistä:
 - Kopioi `env_template` tiedoston tiedot omaan `/backend/.env` tiedostoon
 - Täytä `.env` tiedostoon omat MySQL yhteyden parametrit
 - Avaa konsoli-ikkuna `/backend` kansioon
-- Aja komento `npm install` ja `npm run`
+- Aja komento `npm install` ja `npm start`
 - NodeJS Serveri testaa käynnistäessä yhteyttä tietokantaan
 
 Tietokannan ER-kaavio:
