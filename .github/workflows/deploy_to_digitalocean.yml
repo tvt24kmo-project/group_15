@@ -1,0 +1,37 @@
+name: Deploy to digitalocean
+
+on:
+  push:
+    paths:
+      - "backend/**"
+
+
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    # checkout code 
+    steps:
+    - name: checkout repo
+      uses: actions/checkout@v3
+
+    # install deps
+    - name: install nodejs dependencies
+      run: |
+        cd backend 
+        npm install
+
+    # restart nodejs server
+    - name: restart node.js app
+      run: |
+        pm2 stop all || true
+        pm2 start backend/app.js --name backend
+
+
+    # ensure apache proxy is running
+    - name: Restart apache
+      run: |
+        sudo systemctl restart apache2
+
+

@@ -10,7 +10,6 @@ const cards = {
         return db.query("select * from cards where cardnumber=?", [cardnumber], callback);
     },
 
-
     //kortin salasanan kryptaus
     add: function (cards_data, callback) {
         bcrypt.hash(cards_data.pinhash, 10, function (err, hashed_pinhash) {
@@ -18,6 +17,7 @@ const cards = {
                 [cards_data.cardtype, hashed_pinhash, cards_data.islocked, cards_data.cardnumber], callback);
         })
     },
+
     //kortin tietojen päivitys id:n perusteella
     update: function (id, update_cards_data, callback) {
         bcrypt.hash(update_cards_data.pinhash, 10, function (err, hashed_pinhash) {
@@ -25,10 +25,18 @@ const cards = {
                 [update_cards_data.cardtype, hashed_pinhash, update_cards_data.islocked, id], callback);
         })
     },
+
     //kortin poisto id:n perusteella
-    delete: function (id, callback) {
+    delete: function (id, callback) {   
         return db.query("DELETE FROM cards WHERE idcard=?", [id], callback);
-    }
+    },
+
+    //kortin väärän yrityksen päivitys id:n perusteella
+    updateWrongAttempt: function(wrong_attempts, id, callback) {
+        return db.query("UPDATE cards SET wrong_attempts=? WHERE idcard=?", [wrong_attempts, id], callback);
+    },
+
+    
 }
 
 module.exports = cards;
