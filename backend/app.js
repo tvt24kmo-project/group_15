@@ -11,8 +11,9 @@ var usersRouter = require('./routes/customers');
 var cardsRouter = require('./routes/cards');
 var transactionsRouter = require('./routes/transactions');
 var accountsRouter = require('./routes/accounts');
+var loginRouter = require('./routes/login');
+const jwt = require('jsonwebtoken');
 var proceduresRouter = require('./routes/procedures');
-
 
 
 app.use(logger('dev'));
@@ -26,6 +27,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // MUISTA LISÄTÄ ROUTERIT JA NIIDEN POLUT TÄNNE ETTÄ EI TULE 404 VIRHETTÄ
 app.use('/', indexRouter);
+app.use('/login', loginRouter);
+app.use(authenticateToken); // Tämä rivi vaatii kirjautumisen ennen kuin pääsee seuraaviin polkuihin
 app.use('/customers', usersRouter);
 app.use('/cards', cardsRouter);
 app.use('/transactions', transactionsRouter);
@@ -34,10 +37,27 @@ app.use('/procedures', proceduresRouter);
 
 
 
+
 app.use((req, res, next) => {
     console.log(`Incoming request: ${req.method} ${req.path}`);
     next();
 });
 
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
+  
+    console.log("token = "+token);
+    if (token == null) return res.sendStatus(401)
+  
+    jwt.verify(token, process.env.MY_TOKEN, function(err, user) {
+  
+      if (err) return res.sendStatus(403)
+
+      req.user = user
+  
+      next()
+    })
+  } 
 
 module.exports = app;
