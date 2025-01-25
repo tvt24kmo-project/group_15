@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - "backend/**"
-
+      - ".github/workflows/deploy_to_digitalocean.yml"
 
 
 jobs:
