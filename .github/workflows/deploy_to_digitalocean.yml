@@ -17,7 +17,7 @@ jobs:
 
     - name: Backup .env file
       run: |
-        [ -f backend/.env ] && cp backend/.env /tmp/env_backup
+        [ -f ./backend/.env ] && cp backend/.env /tmp/env_backup
 
     - name: install nodejs dependencies
       working-directory: ./backend
@@ -25,14 +25,14 @@ jobs:
 
     - name: Restore .env file
       run: |
-        [ -f /tmp/env_backup ] && mv /tmp/env_backup backend/.env || true
+        [ -f /tmp/env_backup ] && mv /tmp/env_backup ./backend/.env || true
 
 
     - name: Restart Node.js application
       run: |
         pm2 restart backend || pm2 start backend/app.js --name backend
 
-        
+
     - name: Restart Apache
       run: sudo systemctl restart apache2
 
