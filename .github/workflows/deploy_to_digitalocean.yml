@@ -4,34 +4,37 @@ on:
   push:
     paths:
       - "backend/**"
-
-
+      - ".github/workflows/deploy_to_digitalocean.yml"
 
 jobs:
   deploy:
     runs-on: self-hosted
 
-    # checkout code 
     steps:
-    - name: checkout repo
-      uses: actions/checkout@v3
-
-    # install deps
-    - name: install nodejs dependencies
+    - name: Backup .env file
       run: |
-        cd backend 
-        npm install
+        REPO_DIR="/home/jesse/actions-runner/_work/group_15/group_15"
+        if [ -f $REPO_DIR/backend/.env ]; then
+            cp $REPO_DIR/backend/.env /tmp/env_backup
+        fi
 
-    # restart nodejs server
-    - name: restart node.js app
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Install Node.js dependencies
+      working-directory: ./backend
+      run: npm install
+
+    - name: Restore .env file
       run: |
-        pm2 stop all || true
-        pm2 start backend/app.js --name backend
+        REPO_DIR="/home/jesse/actions-runner/_work/group_15/group_15"
+        if [ -f /tmp/env_backup ]; then
+            cp /tmp/env_backup $REPO_DIR/backend/.env
+        fi
 
-
-    # ensure apache proxy is running
-    - name: Restart apache
+    - name: Restart Node.js application
       run: |
-        sudo systemctl restart apache2
+        pm2 restart backend || (pm2 start /home/jesse/actions-runner/_work/group_15/group_15/backend/app.js --name backend && pm2 save)
 
-
+    - name: Restart Apache
+      run: sudo systemctl restart apache2
