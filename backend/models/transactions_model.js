@@ -28,7 +28,6 @@ const transactions = {
             WHERE accounts.accountiban = ?;", [account_id], callback);
     }
 
-
 }
 
 module.exports = transactions;
