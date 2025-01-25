@@ -32,7 +32,7 @@
      <string>TextLabel</string>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>446</x>
@@ -50,7 +50,7 @@
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QLineEdit" name="lineEditUsername"/>
+      <widget class="QLineEdit" name="textUsername"/>
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="labelPassword">
@@ -60,12 +60,19 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QLineEdit" name="lineEditPassword"/>
+      <widget class="QLineEdit" name="textPassword"/>
      </item>
      <item row="2" column="1">
-      <widget class="QPushButton" name="buttonLogin">
+      <widget class="QPushButton" name="btnLogin">
        <property name="text">
         <string>Kirjaudu</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="labelInfo">
+       <property name="text">
+        <string/>
        </property>
       </widget>
      </item>
@@ -78,7 +85,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
