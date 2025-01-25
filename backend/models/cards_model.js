@@ -26,6 +26,7 @@ const cards = {
         })
     },
 
+    
     //kortin poisto id:n perusteella
     delete: function (id, callback) {   
         return db.query("DELETE FROM cards WHERE idcard=?", [id], callback);
