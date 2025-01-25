@@ -17,7 +17,10 @@ jobs:
 
     - name: Backup .env file
       run: |
-        [ -f ./backend/.env ] && cp backend/.env /tmp/env_backup
+        REPO_DIR="/home/jesse/actions-runner/_work/group_15/group_15"
+        if [ -f $REPO_DIR/backend/.env ]; then
+            cp $REPO_DIR/backend/.env /tmp/env_backup
+        fi
 
     - name: install nodejs dependencies
       working-directory: ./backend
@@ -25,8 +28,10 @@ jobs:
 
     - name: Restore .env file
       run: |
-        [ -f /tmp/env_backup ] && mv /tmp/env_backup ./backend/.env || true
-
+        REPO_DIR="/home/jesse/actions-runner/_work/group_15/group_15"
+        if [ -f /tmp/env_backup ]; then
+            cp /tmp/env_backup $REPO_DIR/backend/.env
+        fi
 
     - name: Restart Node.js application
       run: |
