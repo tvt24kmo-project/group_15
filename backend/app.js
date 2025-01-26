@@ -28,7 +28,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // MUISTA LISÄTÄ ROUTERIT JA NIIDEN POLUT TÄNNE ETTÄ EI TULE 404 VIRHETTÄ
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
-app.use(authenticateToken); // Tämä rivi vaatii kirjautumisen ennen kuin pääsee seuraaviin polkuihin
+app.use(authenticateToken); // KOMMENTOI TÄMÄ RIVI POIS JOS HALUAT TESTATA ILMAN KIRJAUTUMISTA
 app.use('/customers', usersRouter);
 app.use('/cards', cardsRouter);
 app.use('/transactions', transactionsRouter);
