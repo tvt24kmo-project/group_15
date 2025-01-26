@@ -1,3 +1,4 @@
+#include "cardinfo.h"
 #include "environment.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -69,6 +70,11 @@ void MainWindow::loginSlot(QNetworkReply *reply)
         else {
             if(response_data!="false" && response_data.length()>20) {
                 ui->labelInfo->setText("Kirjautuminen OK");
+                QByteArray myToken="Bearer "+response_data;
+                cardInfo *objCardInfo= new cardInfo(this);
+                objCardInfo->setUsername(ui->textUsername->text());
+                objCardInfo->setMyToken(myToken);
+                objCardInfo->open();
             }
             else {
                 ui->labelInfo->setText("Väärä tunnus/salasana");
