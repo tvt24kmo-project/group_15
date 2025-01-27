@@ -6,7 +6,7 @@ DB_NAME=
 DB_PORT=
 
 # localhost:xxxx <- tuo portti
-PORT= 
+PORT=
 
 
 # Execute command "node create_token" to create token
