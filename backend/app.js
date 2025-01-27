@@ -6,6 +6,15 @@ var bodyParser = require('body-parser');
 var app = express(); 
 
 
+// reverse proxyn hommia
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}.`);
+}).on('error', (err) => {
+  console.error('Error:', err);
+}); 
+
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/customers');
 var cardsRouter = require('./routes/cards');
