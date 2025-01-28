@@ -5,12 +5,6 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var app = express(); 
 
-app.listen(3000, '0.0.0.0', () => { // reverse proxyn hommia
-  console.log(`Server is running on port ${PORT}.`);
-}).on('app.listen error: ', (err) => {
-  console.error('Error:', err);
-}); 
-
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/customers');
