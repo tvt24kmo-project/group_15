@@ -1,16 +1,13 @@
-const dotenv = require('dotenv');
-dotenv.config();
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 var app = express(); 
-const PORT = process.env.PORT;
 
-app.listen(PORT, '0.0.0.0', () => { // reverse proxyn hommia
+app.listen(3000, '0.0.0.0', () => { // reverse proxyn hommia
   console.log(`Server is running on port ${PORT}.`);
-}).on('error', (err) => {
+}).on('app.listen error: ', (err) => {
   console.error('Error:', err);
 }); 
 
