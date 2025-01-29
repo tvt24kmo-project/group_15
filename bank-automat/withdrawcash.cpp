@@ -35,11 +35,11 @@ void WithdrawCash::on_buttonWithdrawOther_clicked()
         // jos jaollinen minimi setelillä (tällä hetkellä 20) tai 50 setelillä (pakosta tosi aina 50€+ summilla, joten or statement ei haittaa)
         if (amount%MINBILLSIZE == 0 || amount%50 == 0)
         {
-            qDebug()<<"Jaollinen " + QString::number(MINBILLSIZE) + ":llä(pienin seteli)"; // qstring moment
+            qDebug()<<"Jaollinen " + QString::number(MINBILLSIZE) + ":llä(pienin seteli), tai 50€"; // qstring moment
         }
         else
         {
-            qDebug()<<"Ei jaollinen" + QString::number(MINBILLSIZE) + ":llä (pienin seteli)";
+            qDebug()<<"Ei jaollinen" + QString::number(MINBILLSIZE) + ":llä (pienin seteli), tai 50€";
         }
     }
 
