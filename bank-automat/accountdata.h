@@ -21,6 +21,10 @@ public:
 
     void setMyToken(const QByteArray &newMyToken);
 
+    int getCustomerId();
+
+    int getAccountId();
+
 private slots:
     void showDataSlot(QNetworkReply *reply);
     void fetchData();
@@ -32,6 +36,8 @@ private:
     QNetworkAccessManager *dataManager;
     QNetworkReply *reply;
     QByteArray response_data;
+
+    int accountId = 0;
 };
 
 #endif // ACCOUNTDATA_H

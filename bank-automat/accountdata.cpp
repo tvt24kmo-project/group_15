@@ -50,7 +50,9 @@ void accountData::showDataSlot(QNetworkReply *reply)
 
     //accounts: idaccount,customer_id,balance,accountiban,credit_limit
 
-    ui->labelIdaccount->setText(QString::number(jsonObj["idaccount"].toInt()));
+    accountId = jsonObj["idaccount"].toInt();
+    ui->labelIdaccount->setText(QString::number(accountId));
+
     ui->labelCustomer_id->setText(QString::number(jsonObj["customer_id"].toInt()));
     ui->labelBalance->setText(jsonObj["balance"].toString());
     ui->labelAccountiban->setText(jsonObj["accountiban"].toString());
@@ -66,3 +68,8 @@ void accountData::showDataSlot(QNetworkReply *reply)
 
 }
 
+
+int accountData::getAccountId() 
+{
+    return accountId;
+}

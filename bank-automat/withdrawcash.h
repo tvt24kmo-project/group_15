@@ -10,6 +10,7 @@
 #include <QJsonObject>
 
 #include "environment.h"
+#include "accountdata.h"
 
 namespace Ui {
 class WithdrawCash;
@@ -23,6 +24,7 @@ public:
     explicit WithdrawCash(QWidget *parent = nullptr);
     ~WithdrawCash();
 
+    void setAccountDataObject(accountData *accountData);
 private slots:
     void on_buttonOther_clicked();
     void on_button20_clicked();
@@ -38,6 +40,7 @@ private:
     QNetworkAccessManager *manager;
     QString withdrawUrl = Environment::base_url() + "/procedures/withdraw";
     void sendWithdrawRequest(int amount);
+    accountData* myAccountDataObject = nullptr;
 };
 
 #endif // WITHDRAWCASH_H

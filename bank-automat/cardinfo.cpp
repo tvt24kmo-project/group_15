@@ -37,6 +37,10 @@ void cardInfo::on_btnData_clicked()
 void cardInfo::on_buttonWithdrawCash_clicked()
 {
     WithdrawCash *objWithdrawCash = new WithdrawCash(this);
+    accountData *objAccountData = new accountData(this);
+    objAccountData->setUsername(username);
+    objAccountData->setMyToken(myToken);
+    objWithdrawCash->setAccountDataObject(objAccountData); // asetetaan accountData objekti withdrawCash objektiin 
     objWithdrawCash->open();
 }
 

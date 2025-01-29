@@ -9,6 +9,11 @@ WithdrawCash::WithdrawCash(QWidget *parent)
     ui->setupUi(this);
 }
 
+void WithdrawCash::setAccountDataObject(accountData *dataObj)
+{
+    myAccountDataObject = dataObj;
+}
+
 WithdrawCash::~WithdrawCash()
 {
     delete ui;
@@ -106,8 +111,17 @@ void WithdrawCash::on_withdrawCash_clicked()
 void WithdrawCash::sendWithdrawRequest(int amount)
 {
     QJsonObject jsonObj;
-    jsonObj.insert("account_id", 7);
-    jsonObj.insert("amount", cashAmount);
+    if (myAccountDataObject)
+    {
+        jsonObj.insert("account_id", myAccountDataObject->getAccountId()); // hakee accountdatasta accountid:n
+        jsonObj.insert("amount", cashAmount);
+    }
+    else
+    {
+        qDebug()<<"Virhe";
+        return;
+    }
+
     qDebug()<<jsonObj;
     qDebug()<<withdrawUrl;
     cashAmount = 0; // nollataan luvun keruun jälkeen
