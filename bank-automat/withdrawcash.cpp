@@ -68,10 +68,10 @@ void WithdrawCash::on_button40_clicked()
 }
 
 
-void WithdrawCash::on_button60_clicked()
+void WithdrawCash::on_button50_clicked()
 {
-    cashAmount = 60;
-    ui->labelAmount->setText("60");
+    cashAmount = 50;
+    ui->labelAmount->setText("50");
 }
 
 
@@ -79,5 +79,11 @@ void WithdrawCash::on_button100_clicked()
 {
     cashAmount = 100;
     ui->labelAmount->setText("100");
+}
+
+
+void WithdrawCash::on_withdrawCash_clicked()
+{
+
 }
 

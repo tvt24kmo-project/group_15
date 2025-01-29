@@ -16,8 +16,7 @@ SOURCES += \
     login.cpp \
     main.cpp \
     mainwindow.cpp \
-    withdrawcash.cpp \
-    withdrawhandler.cpp
+    withdrawcash.cpp
 
 HEADERS += \
     accountdata.h \
@@ -26,8 +25,7 @@ HEADERS += \
     imagefetcher.h \
     login.h \
     mainwindow.h \
-    withdrawcash.h \
-    withdrawhandler.h
+    withdrawcash.h
 
 FORMS += \
     accountdata.ui \

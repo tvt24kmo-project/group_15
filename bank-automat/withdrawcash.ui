@@ -10,21 +10,26 @@
     <height>512</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <pointsize>12</pointsize>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>10</y>
-     <width>188</width>
-     <height>47</height>
+     <x>230</x>
+     <y>20</y>
+     <width>143</width>
+     <height>36</height>
     </rect>
    </property>
    <property name="font">
     <font>
-     <pointsize>26</pointsize>
+     <pointsize>20</pointsize>
     </font>
    </property>
    <property name="text">
@@ -36,105 +41,89 @@
     <rect>
      <x>200</x>
      <y>440</y>
-     <width>281</width>
-     <height>20</height>
+     <width>261</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="text">
     <string>TAUSTAKUVAN PLACEHOLDER LABEL</string>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>170</x>
+     <x>230</x>
      <y>120</y>
-     <width>311</width>
-     <height>101</height>
+     <width>158</width>
+     <height>110</height>
     </rect>
    </property>
-   <layout class="QGridLayout" name="gridLayout">
+   <layout class="QGridLayout" name="gridCashButtons">
     <item row="0" column="0">
      <widget class="QPushButton" name="button20">
+      <property name="font">
+       <font>
+        <pointsize>24</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>20</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="1">
-     <widget class="QPushButton" name="button40">
-      <property name="text">
-       <string>40</string>
-      </property>
-     </widget>
-    </item>
     <item row="1" column="0">
-     <widget class="QPushButton" name="button60">
+     <widget class="QPushButton" name="button50">
+      <property name="font">
+       <font>
+        <pointsize>24</pointsize>
+       </font>
+      </property>
       <property name="text">
-       <string>60</string>
+       <string>50</string>
       </property>
      </widget>
     </item>
     <item row="1" column="1">
      <widget class="QPushButton" name="button100">
+      <property name="font">
+       <font>
+        <pointsize>24</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>100</string>
       </property>
      </widget>
     </item>
-   </layout>
-  </widget>
-  <widget class="QWidget" name="">
-   <property name="geometry">
-    <rect>
-     <x>190</x>
-     <y>340</y>
-     <width>233</width>
-     <height>30</height>
-    </rect>
-   </property>
-   <layout class="QFormLayout" name="formLayout">
-    <item row="0" column="0">
-     <widget class="QLabel" name="label_3">
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>NOSTON MÄÄRÄ: </string>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="1">
-     <widget class="QLabel" name="labelAmount">
+     <widget class="QPushButton" name="button40">
       <property name="font">
        <font>
-        <pointsize>12</pointsize>
+        <pointsize>24</pointsize>
        </font>
       </property>
       <property name="text">
-       <string/>
+       <string>40</string>
       </property>
      </widget>
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>100</x>
      <y>260</y>
-     <width>455</width>
-     <height>34</height>
+     <width>441</width>
+     <height>31</height>
     </rect>
    </property>
-   <layout class="QGridLayout" name="gridLayout_2">
+   <layout class="QGridLayout" name="customAmt">
     <item row="0" column="0">
      <widget class="QLabel" name="label_2">
       <property name="font">
        <font>
-        <pointsize>18</pointsize>
+        <pointsize>12</pointsize>
        </font>
       </property>
       <property name="text">
@@ -158,18 +147,64 @@
     </item>
    </layout>
   </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>320</y>
+     <width>251</width>
+     <height>95</height>
+    </rect>
+   </property>
+   <layout class="QFormLayout" name="custAmtLabelBtnLayout">
+    <item row="0" column="0">
+     <layout class="QFormLayout" name="cashAmountLayout">
+      <item row="0" column="1">
+       <widget class="QLabel" name="labelAmount">
+        <property name="font">
+         <font>
+          <pointsize>16</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="font">
+         <font>
+          <pointsize>16</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>NOSTON MÄÄRÄ: </string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="1" column="0" colspan="2">
+     <widget class="QPushButton" name="pushButton">
+      <property name="font">
+       <font>
+        <pointsize>28</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Tee nosto</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <zorder>layoutWidget</zorder>
+  <zorder>layoutWidget</zorder>
+  <zorder>layoutWidget</zorder>
   <zorder>labelWithdrawCashBG</zorder>
   <zorder>label</zorder>
-  <zorder>button20</zorder>
-  <zorder>button40</zorder>
-  <zorder>button60</zorder>
-  <zorder>button100</zorder>
-  <zorder>buttonOther</zorder>
-  <zorder>label_2</zorder>
-  <zorder>lineEditCustomAmount</zorder>
-  <zorder>buttonOther</zorder>
-  <zorder>label_3</zorder>
-  <zorder>labelAmount</zorder>
+  <zorder>pushButton</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -22,7 +22,7 @@ private slots:
 
     void on_button40_clicked();
 
-    void on_button60_clicked();
+    void on_button50_clicked();
 
     void on_button100_clicked();
 
