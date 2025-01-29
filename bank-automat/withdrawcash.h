@@ -8,6 +8,8 @@
 #include <QNetworkReply>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QMessageBox>
+
 
 #include "environment.h"
 #include "accountdata.h"
@@ -23,8 +25,8 @@ class WithdrawCash : public QDialog
 public:
     explicit WithdrawCash(QWidget *parent = nullptr);
     ~WithdrawCash();
-
     void setAccountDataObject(accountData *accountData);
+
 private slots:
     void on_buttonOther_clicked();
     void on_button20_clicked();
@@ -32,6 +34,7 @@ private slots:
     void on_button50_clicked();
     void on_button100_clicked();
     void on_withdrawCash_clicked();
+    void handleWithdrawResponse(QNetworkReply *reply);
 
 private:
     int MINBILLSIZE = 20; // pienin seteli mitä automaatti antaa muun määrän nostoon (esim 2x20€ = ok, 1x5 tai 3x5 = ei ok)

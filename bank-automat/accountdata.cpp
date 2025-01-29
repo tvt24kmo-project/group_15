@@ -73,3 +73,8 @@ int accountData::getAccountId()
 {
     return accountId;
 }
+
+QByteArray accountData::getMyToken()
+{
+    return myToken;
+}

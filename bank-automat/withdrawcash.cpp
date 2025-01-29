@@ -124,6 +124,53 @@ void WithdrawCash::sendWithdrawRequest(int amount)
 
     qDebug()<<jsonObj;
     qDebug()<<withdrawUrl;
+
+    QNetworkRequest request(withdrawUrl);
+    request.setRawHeader("Authorization", myAccountDataObject->getMyToken());
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+    manager = new QNetworkAccessManager(this);
+    connect(manager, &QNetworkAccessManager::finished, this, &WithdrawCash::handleWithdrawResponse);
+
+    QJsonDocument doc(jsonObj);
+    QByteArray data = doc.toJson();
+    qDebug() << "Sending withdraw request:" << data;
+
+    manager->post(request, data);
+
     cashAmount = 0; // nollataan luvun keruun jälkeen
 }
 
+
+
+void WithdrawCash::handleWithdrawResponse(QNetworkReply *reply)
+{
+    QByteArray response_data = reply->readAll();
+    qDebug() << "Withdraw response:" << response_data;
+
+    if (reply->error() != QNetworkReply::NoError) {
+        QErrorMessage errorMessage(this);
+        errorMessage.showMessage("Network error: " + reply->errorString());
+    } else {
+        QJsonDocument jsonDoc = QJsonDocument::fromJson(response_data);
+        if (jsonDoc.isNull()) {
+            QErrorMessage errorMessage(this);
+            errorMessage.showMessage("Invalid response from server.");
+            return;
+        }
+
+        QJsonObject jsonObj = jsonDoc.object();
+        qDebug() << "Response JSON:" << jsonObj;
+        QString message = jsonObj["message"].toString();
+        
+        if (message == "Withdrawal successful.") {
+            QMessageBox::information(this, "Success", "Nosto onnistui!");
+        } else {
+            QErrorMessage errorMessage(this);
+            errorMessage.showMessage("Withdrawal failed: " + message);
+        }
+    }
+
+    reply->deleteLater();
+    manager->deleteLater();
+}

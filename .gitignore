@@ -4,3 +4,4 @@ bank-automat/*.user
 
 backend/.env 
 *.mwb.bak
+.vscode/settings.json
