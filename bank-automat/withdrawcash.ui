@@ -34,8 +34,8 @@
   <widget class="QLabel" name="labelWithdrawCashBG">
    <property name="geometry">
     <rect>
-     <x>180</x>
-     <y>410</y>
+     <x>200</x>
+     <y>440</y>
      <width>281</width>
      <height>20</height>
     </rect>
@@ -55,28 +55,28 @@
    </property>
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <widget class="QPushButton" name="pushButton">
+     <widget class="QPushButton" name="button20">
       <property name="text">
        <string>20</string>
       </property>
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QPushButton" name="pushButton_2">
+     <widget class="QPushButton" name="button40">
       <property name="text">
        <string>40</string>
       </property>
      </widget>
     </item>
     <item row="1" column="0">
-     <widget class="QPushButton" name="pushButton_3">
+     <widget class="QPushButton" name="button60">
       <property name="text">
        <string>60</string>
       </property>
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QPushButton" name="pushButton_4">
+     <widget class="QPushButton" name="button100">
       <property name="text">
        <string>100</string>
       </property>
@@ -87,9 +87,45 @@
   <widget class="QWidget" name="">
    <property name="geometry">
     <rect>
-     <x>80</x>
-     <y>300</y>
-     <width>451</width>
+     <x>190</x>
+     <y>340</y>
+     <width>233</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <layout class="QFormLayout" name="formLayout">
+    <item row="0" column="0">
+     <widget class="QLabel" name="label_3">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>NOSTON MÄÄRÄ: </string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLabel" name="labelAmount">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>260</y>
+     <width>455</width>
      <height>34</height>
     </rect>
    </property>
@@ -114,14 +150,26 @@
      </widget>
     </item>
     <item row="0" column="2">
-     <widget class="QPushButton" name="buttonWithdrawOther">
+     <widget class="QPushButton" name="buttonOther">
       <property name="text">
-       <string>Nosta</string>
+       <string>Käytä muuta määrää</string>
       </property>
      </widget>
     </item>
    </layout>
   </widget>
+  <zorder>labelWithdrawCashBG</zorder>
+  <zorder>label</zorder>
+  <zorder>button20</zorder>
+  <zorder>button40</zorder>
+  <zorder>button60</zorder>
+  <zorder>button100</zorder>
+  <zorder>buttonOther</zorder>
+  <zorder>label_2</zorder>
+  <zorder>lineEditCustomAmount</zorder>
+  <zorder>buttonOther</zorder>
+  <zorder>label_3</zorder>
+  <zorder>labelAmount</zorder>
  </widget>
  <resources/>
  <connections/>
