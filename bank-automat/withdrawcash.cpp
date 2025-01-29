@@ -1,6 +1,5 @@
 #include "withdrawcash.h"
 #include "ui_withdrawcash.h"
-#include <QErrormessage>
 
 
 WithdrawCash::WithdrawCash(QWidget *parent)
@@ -84,6 +83,33 @@ void WithdrawCash::on_button100_clicked()
 
 void WithdrawCash::on_withdrawCash_clicked()
 {
+    if(cashAmount < 0) // jos yrittää negatiivista lukua
+    {
+        QErrorMessage *errorMessage = new QErrorMessage(this);
+        errorMessage->showMessage("Negatiivista nostoa ei voi tehdä");
+    }
+    else if (cashAmount == 0 )
+    {
+        QErrorMessage *errorMessage = new QErrorMessage(this);
+        errorMessage->showMessage("Syötä noston määrä ensin");
+    }
+    else
+    {
+        qDebug()<<"Nostetaan " + QString::number(cashAmount) + "€"; // tieto konsoliin seurantaa varten
+        ui->labelAmount->setText("0"); // nollataan labeli
+        ui->lineEditCustomAmount->setText(""); // nollataan muu määrä
 
+        sendWithdrawRequest(cashAmount); // lähetetään nostopyyntö
+    }
+}
+
+void WithdrawCash::sendWithdrawRequest(int amount)
+{
+    QJsonObject jsonObj;
+    jsonObj.insert("account_id", 7);
+    jsonObj.insert("amount", cashAmount);
+    qDebug()<<jsonObj;
+    qDebug()<<withdrawUrl;
+    cashAmount = 0; // nollataan luvun keruun jälkeen
 }
 
