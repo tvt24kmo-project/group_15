@@ -13,6 +13,7 @@ SOURCES += \
     cardinfo.cpp \
     environment.cpp \
     imagefetcher.cpp \
+    login.cpp \
     main.cpp \
     mainwindow.cpp
 
@@ -21,11 +22,13 @@ HEADERS += \
     cardinfo.h \
     environment.h \
     imagefetcher.h \
+    login.h \
     mainwindow.h
 
 FORMS += \
     accountdata.ui \
     cardinfo.ui \
+    login.ui \
     mainwindow.ui
 
 # Default rules for deployment.

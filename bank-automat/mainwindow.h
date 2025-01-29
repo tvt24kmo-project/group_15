@@ -27,15 +27,12 @@ private slots:
     // nämä slotit kuuntelee ImageFetcherin signaaleja
     void onImageFetched(const QPixmap &pixmap); // slot onImageFetched joka ottaa QPixmapin parametrina ja asettaa sen labeliin
     void onFetchFailed(const QString &error); // slot onFetchFailed joka ottaa QStringin parametrina ja asettaa sen labeliin
-    void loginSlot(QNetworkReply *reply);
-    void on_btnLogin_clicked();
+
+    void on_btnStart_clicked();
 private:
     Ui::MainWindow *ui;
     ImageFetcher *imageFetcher; // luodaan olio luokasta ImageFetcher
 
-    QNetworkAccessManager *postManager;
-    QNetworkReply *reply;
-    QByteArray response_data;
 };
 
 
