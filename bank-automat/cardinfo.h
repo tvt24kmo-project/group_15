@@ -22,6 +22,8 @@ public:
 private slots:
     void on_btnData_clicked();
 
+    void on_buttonWithdrawCash_clicked();
+
 private:
     Ui::cardInfo *ui;
     QString username;
