@@ -37,7 +37,8 @@ void WithdrawCash::on_buttonOther_clicked()
     else if (ok)// jos intiksi muunto menee läpi
     {
         // jos jaollinen minimi setelillä (20) tai 50 setelillä (pakosta tosi aina 50€+ summilla, joten OR min ja 50 välillä ei aiheuta ongelmia)
-        if (cashAmount%MINBILLSIZE == 0 || cashAmount%50 == 0)
+        // ja myös jos jaollinen 20+50 luvuilla, kuten 70, 120, 170 jne.
+        if (cashAmount >= MINBILLSIZE && (cashAmount % MINBILLSIZE == 0 || cashAmount % 50 == 0 || cashAmount % 50 % MINBILLSIZE == 0))
         {
             qDebug()<<"Jaollinen " + QString::number(MINBILLSIZE) + ":llä(pienin seteli), tai 50€"; // qstring moment
             ui->labelAmount->setText(QString::number(cashAmount)); // muunnetaan rahamäärä qstringiksi ja labeliin
@@ -98,13 +99,22 @@ void WithdrawCash::on_withdrawCash_clicked()
         QErrorMessage *errorMessage = new QErrorMessage(this);
         errorMessage->showMessage("Syötä noston määrä ensin");
     }
-    else
+
+    // VIELÄ KERRAN tarkistetaan että määrä on varmasti rajojen sisällä,
+    // koska jos laittaa arvoksi esim 30 ja painaa tosi nopeasti "tee nosto" niin sen saa vietyä läpi ennen kun muun arvon tarkistuksen virheikkuna avautuu
+    else if (cashAmount >= MINBILLSIZE && (cashAmount % MINBILLSIZE == 0 || cashAmount % 50 == 0 || cashAmount % 50 % MINBILLSIZE == 0))
     {
         qDebug()<<"Nostetaan " + QString::number(cashAmount) + "€"; // tieto konsoliin seurantaa varten
         ui->labelAmount->setText("0"); // nollataan labeli
         ui->lineEditCustomAmount->setText(""); // nollataan muu määrä
 
         sendWithdrawRequest(cashAmount); // lähetetään nostopyyntö
+    }
+
+    else
+    {
+        QErrorMessage *errorMessage = new QErrorMessage(this);
+        errorMessage->showMessage("Syötä summa ennen nostoa");
     }
 }
 
