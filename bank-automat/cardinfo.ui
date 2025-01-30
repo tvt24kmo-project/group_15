@@ -52,7 +52,7 @@
     <string>Näytä saldo</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_3">
+  <widget class="QPushButton" name="btnTransfer">
    <property name="geometry">
     <rect>
      <x>270</x>
