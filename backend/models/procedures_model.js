@@ -33,6 +33,18 @@ const procedures = {
         );
     },
 
+    GetCustomerTransactions: function (idaccount, page, callback) {
+        db.query(
+            "CALL GetCustomerTransactions(?, ?);",
+            [idaccount, page],
+            function (err, results) {
+                if (err) {
+                    return callback(err, null);
+                }
+                callback(null, results[0]); // Return the first result set
+            }
+        );
+    },
 };
 
 module.exports = procedures;
