@@ -52,4 +52,26 @@ router.post('/getAccountType', function (req, res) {
     });
 });
 
+router.get('/GetCustomerTransactions', function (req, res) {
+    const { idaccount, page } = req.query;
+
+    // Validate input
+    if (!idaccount || !page || page < 1) {
+        return res.status(400).json({ 
+            error: 'Invalid input: both idaccount and page (positive integer) are required.' 
+        });
+    }
+
+    procedures.GetCustomerTransactions(idaccount, page, function (err, result) {
+        if (err) {
+            console.error(err); // Log error for debugging
+            res.status(500).json({ 
+                error: 'An error occurred while fetching transactions.' 
+            });
+        } else {
+            res.json(result);
+        }
+    });
+});
+
 module.exports = router;
