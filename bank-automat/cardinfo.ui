@@ -65,7 +65,7 @@
     <string>Tilisiirto</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_4">
+  <widget class="QPushButton" name="buttonWithdrawCash">
    <property name="geometry">
     <rect>
      <x>270</x>

@@ -1,30 +1,29 @@
 #ifndef LOGIN_H
 #define LOGIN_H
 
+#include <QNetworkAccessManager>
 #include <QDialog>
 #include <QtNetwork>
-#include <QNetworkAccessManager>
 #include <QJsonDocument>
 
 namespace Ui {
-class Login;
+class login;
 }
 
-class Login : public QDialog
+class login : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit Login(QWidget *parent = nullptr);
-    ~Login();
-
+    explicit login(QWidget *parent = nullptr);
+    ~login();
 private slots:
-    void on_buttonLogin_clicked();
-    void loginSlot (QNetworkReply *reply);
-
+    void loginSlot(QNetworkReply *reply);
+    void on_btnLogin_clicked();
 private:
-    Ui::Login *ui;
-    QNetworkAccessManager *loginManager;
+    Ui::login *ui;
+
+    QNetworkAccessManager *postManager;
     QNetworkReply *reply;
     QByteArray response_data;
 };

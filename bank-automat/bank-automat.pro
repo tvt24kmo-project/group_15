@@ -15,7 +15,8 @@ SOURCES += \
     imagefetcher.cpp \
     login.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    withdrawcash.cpp
 
 HEADERS += \
     accountdata.h \
@@ -23,12 +24,15 @@ HEADERS += \
     environment.h \
     imagefetcher.h \
     login.h \
-    mainwindow.h
+    mainwindow.h \
+    withdrawcash.h
 
 FORMS += \
     accountdata.ui \
     cardinfo.ui \
-    mainwindow.ui
+    login.ui \
+    mainwindow.ui \
+    withdrawcash.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

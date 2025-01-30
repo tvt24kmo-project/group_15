@@ -32,51 +32,18 @@
      <string>TextLabel</string>
     </property>
    </widget>
-   <widget class="QWidget" name="layoutWidget">
+   <widget class="QPushButton" name="btnStart">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>130</y>
-      <width>191</width>
-      <height>81</height>
+      <x>350</x>
+      <y>190</y>
+      <width>80</width>
+      <height>24</height>
      </rect>
     </property>
-    <layout class="QFormLayout" name="loginFormLayout">
-     <item row="0" column="0">
-      <widget class="QLabel" name="labelUsername">
-       <property name="text">
-        <string>Käyttäjänimi</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="textUsername"/>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="labelPassword">
-       <property name="text">
-        <string>Salasana</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="textPassword"/>
-     </item>
-     <item row="2" column="1">
-      <widget class="QPushButton" name="btnLogin">
-       <property name="text">
-        <string>Kirjaudu</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="labelInfo">
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    <property name="text">
+     <string>Aloita</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

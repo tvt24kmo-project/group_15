@@ -1,6 +1,7 @@
 #include "cardinfo.h"
 #include "ui_cardinfo.h"
 #include "accountdata.h"
+#include "withdrawcash.h"
 
 cardInfo::cardInfo(QWidget *parent) : QDialog(parent),ui(new Ui::cardInfo)
 {
@@ -30,5 +31,16 @@ void cardInfo::on_btnData_clicked()
     objAccountData->setUsername(username);
     objAccountData->setMyToken(myToken);
     objAccountData->open();
+}
+
+
+void cardInfo::on_buttonWithdrawCash_clicked()
+{
+    WithdrawCash *objWithdrawCash = new WithdrawCash(this);
+    accountData *objAccountData = new accountData(this);
+    objAccountData->setUsername(username);
+    objAccountData->setMyToken(myToken);
+    objWithdrawCash->setAccountDataObject(objAccountData); // asetetaan accountData objekti withdrawCash objektiin 
+    objWithdrawCash->open();
 }
 

@@ -34,7 +34,7 @@ jobs:
 
     - name: Restart Node.js application
       run: |
-        pm2 restart backend || (pm2 start /home/jesse/actions-runner/_work/group_15/group_15/backend/app.js --name backend && pm2 save)
+        pm2 restart backend || (pm2 start app.js --name backend --cwd /home/jesse/actions-runner/_work/group_15/group_15/backend && pm2 save)
 
     - name: Restart Apache
       run: sudo systemctl restart apache2
