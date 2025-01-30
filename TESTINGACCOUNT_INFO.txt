@@ -1,0 +1,73 @@
+ASIAKKAAT:
+asiakkaita on 3
+id:t 1-3
+customerid - tili + kortti
+1 - credit tili ja kortti
+2 - debit tili ja kortti
+3 - credit ja debit tili, multi kortti
+
+
+
+TILIT:
+accountid 7
+customerid 1
+credit
+
+accountid 9 
+customerid 2
+debit
+
+accountid 10
+customerid 3 <- HUOM
+credit
+
+accountid 11
+customerid 3 <- HUOM
+debit
+
+
+
+CARDS:
+idcard 15
+pin 1234
+number 1111222233334444
+credit
+owned by customerid 1 through accountid 7
+
+idcard 16
+pin 1234
+number 1212343456567878
+debit
+owned by customerid 2 through accountid 9
+
+idard 17
+pin 1234
+number 9999888877776666
+multi
+owned by customerid 3 through accountid 10 and 11
+
+
+ACCOUNT_CARDS:
+idcard 15
+accountid 7
+
+idcard 16
+accountid 9
+
+idcard 17
+accountid 10 -- credit
+
+idcard 17
+accountid 11 -- debit
+
+
+
+eli siis:
+asiakkaalla 1 on luottokortti ja luotollinen tili
+asiakkaalla 2 on normi kortti ja normi tili
+asiakkaalla 3 on multikortti, ja normi+luottotili
+
+
+asiakas 1 kirjautuu pin 1234 tili 1111222233334444
+asiakas 2 kirjautuu pin 1234 tili 1212343456567878
+asiakas 3 kirjautuu pin 1234 tili 9999888877776666
