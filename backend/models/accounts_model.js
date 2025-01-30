@@ -13,6 +13,28 @@ const accounts = {
     getAllAccounts: function (callback) {
         return db.query("SELECT * FROM accounts", callback);
     },
+    // Listaa tilin tiedot kortinnumeron perusteella
+    getById: function (un, callback) {
+        return db.query(`SELECT 
+    a.idaccount, 
+    a.customer_id, 
+    a.balance, 
+    a.accountiban, 
+    a.credit_limit
+FROM 
+    accounts a
+JOIN 
+    account_cards ac
+ON 
+    a.idaccount = ac.account_id
+JOIN 
+    cards c
+ON 
+    ac.card_id = c.idcard
+WHERE 
+    c.cardnumber = ?;`, [un], callback);
+
+    },
     // Päivitä tili id:n perusteella
     updateAccount: function (account, id, callback) {
         return db.query(

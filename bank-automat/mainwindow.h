@@ -1,6 +1,11 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QNetworkAccessManager>
+#include <QDialog>
+#include <QtNetwork>
+#include <QJsonDocument>
+
 #include <QMainWindow>
 #include "imagefetcher.h" // käytetään kuvan noutamiseen tehtyä luokkaa
 
@@ -22,16 +27,15 @@ private slots:
     // nämä slotit kuuntelee ImageFetcherin signaaleja
     void onImageFetched(const QPixmap &pixmap); // slot onImageFetched joka ottaa QPixmapin parametrina ja asettaa sen labeliin
     void onFetchFailed(const QString &error); // slot onFetchFailed joka ottaa QStringin parametrina ja asettaa sen labeliin
-
-    void on_buttonLogin_clicked();
-
-    void on_pushButton_clicked();
-
-    void on_buttonStart_clicked();
-
+    void loginSlot(QNetworkReply *reply);
+    void on_btnLogin_clicked();
 private:
     Ui::MainWindow *ui;
     ImageFetcher *imageFetcher; // luodaan olio luokasta ImageFetcher
+
+    QNetworkAccessManager *postManager;
+    QNetworkReply *reply;
+    QByteArray response_data;
 };
 
 

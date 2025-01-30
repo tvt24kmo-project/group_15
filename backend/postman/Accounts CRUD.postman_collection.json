@@ -35,6 +35,38 @@
 			"response": []
 		},
 		{
+			"name": "Get data based on cardnumber",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/accounts/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"accounts",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get data",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
@@ -112,6 +144,14 @@
 						"1\n"
 					]
 				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "GET",
+				"header": []
 			},
 			"response": []
 		}

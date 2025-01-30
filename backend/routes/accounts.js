@@ -25,6 +25,18 @@ router.get('/', function (req, res) {
         }
     });
 });
+// Listaa tilin tiedot kortinnumeron perusteella
+router.get('/:uname', function(request, response){
+    accounts.getById(request.params.uname,function(err, result){
+        if(err){
+            response.json(err);
+        }
+        else {
+            response.json(result[0]);
+        }
+    })
+});
+
 
 // Päivitä tili id:n perusteella
 router.put('/:id', function (req, res) {

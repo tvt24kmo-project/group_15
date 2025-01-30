@@ -1,0 +1,40 @@
+name: Deploy to digitalocean
+
+on:
+  push:
+    paths:
+      - "backend/**"
+      - ".github/workflows/deploy_to_digitalocean.yml"
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+    - name: Backup .env file
+      run: |
+        REPO_DIR="/home/jesse/actions-runner/_work/group_15/group_15"
+        if [ -f $REPO_DIR/backend/.env ]; then
+            cp $REPO_DIR/backend/.env /tmp/env_backup
+        fi
+
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Install Node.js dependencies
+      working-directory: ./backend
+      run: npm install
+
+    - name: Restore .env file
+      run: |
+        REPO_DIR="/home/jesse/actions-runner/_work/group_15/group_15"
+        if [ -f /tmp/env_backup ]; then
+            cp /tmp/env_backup $REPO_DIR/backend/.env
+        fi
+
+    - name: Restart Node.js application
+      run: |
+        pm2 restart backend || (pm2 start /home/jesse/actions-runner/_work/group_15/group_15/backend/app.js --name backend && pm2 save)
+
+    - name: Restart Apache
+      run: sudo systemctl restart apache2

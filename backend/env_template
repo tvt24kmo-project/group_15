@@ -6,6 +6,6 @@ DB_NAME=
 DB_PORT=
 
 
-# Jotain muuta
-
+# Execute command "node create_token" to create token
+MY_TOKEN =
 

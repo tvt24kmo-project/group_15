@@ -33,6 +33,20 @@ Projektiryhmä koostuu seuraavista henkilöistä:
 - **REST API:** Node.js-pohjainen API mahdollistaa tietokannan ja Qt-sovelluksen välisen kommunikoinnin
 - **Pankkiautomaattisovellus:** Qt-työpöytäsovellus, jossa käytetään QT Network -moduulia
 
+## Tietokannan pyörittäminen paikallisesti:
+- Kloonaa repositorio
+- Avaa MySQL Workbench
+- Luo uusi schema nimeltä `atm_automat`
+- Importtaa MySQL dumppitiedosto valikosta `Server -> Data Import -> Import from Self-Contained File` 
+- Valitse target schema jonka loit äsken
+- Importtaa dumppi
+- Luo `.env` tiedosto `/backend` kansioon
+- Kopioi `env_template` tiedoston tiedot omaan `/backend/.env` tiedostoon
+- Täytä `.env` tiedostoon omat MySQL yhteyden parametrit
+- Avaa konsoli-ikkuna `/backend` kansioon
+- Aja komento `npm install` ja `npm start`
+- NodeJS Serveri testaa käynnistäessä yhteyttä tietokantaan
+
 Tietokannan ER-kaavio:
 <img src="img/ER_kaavio.png">
 
