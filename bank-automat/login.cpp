@@ -23,6 +23,7 @@ void login::on_btnLogin_clicked()
     jsonObj.insert("pinhash",ui->textPassword->text());
 
     QString site_url=Environment::base_url()+"/login";
+    qDebug()<<site_url;
     QNetworkRequest request(site_url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     postManager = new QNetworkAccessManager(this);

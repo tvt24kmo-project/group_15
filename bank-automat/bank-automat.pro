@@ -16,6 +16,7 @@ SOURCES += \
     login.cpp \
     main.cpp \
     mainwindow.cpp \
+    transfer.cpp \
     withdrawcash.cpp
 
 HEADERS += \
@@ -25,6 +26,7 @@ HEADERS += \
     imagefetcher.h \
     login.h \
     mainwindow.h \
+    transfer.h \
     withdrawcash.h
 
 FORMS += \
@@ -32,6 +34,7 @@ FORMS += \
     cardinfo.ui \
     login.ui \
     mainwindow.ui \
+    transfer.ui \
     withdrawcash.ui
 
 # Default rules for deployment.
