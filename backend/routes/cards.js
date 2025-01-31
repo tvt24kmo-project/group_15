@@ -57,8 +57,8 @@ router.delete('/:idcard', function (req, res) {
 });
 
 
-router.put("/update-card-attempts/:idcard", function (req, res) {
-    cards.updateWrongAttempt(req.body.wrong_attempts, req.params.idcard, function (err, result) {
+router.put("/update-card-attempts/:cardnumber", function (req, res) {
+    cards.updateWrongAttempt(req.body.wrong_attempts, req.params.cardnumber, function (err, result) {
         if (err) {
             res.json(err);
         } else {
@@ -67,9 +67,8 @@ router.put("/update-card-attempts/:idcard", function (req, res) {
     });
 });
 
-
-router.post("/update-card-attempts/:idcard", function (req, res) {
-    cards.updateWrongAttempt(req.body.wrong_attempts, req.params.idcard, function (err, result) {
+router.get("/check-lock-status/:cardnumber", function (req, res) {
+    cards.checkLockStatus(req.params.cardnumber, function (err, result) {
         if (err) {
             res.json(err);
         } else {
@@ -77,6 +76,7 @@ router.post("/update-card-attempts/:idcard", function (req, res) {
         }
     });
 });
+
 
 
 module.exports = router;    

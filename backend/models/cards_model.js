@@ -36,11 +36,14 @@ const cards = {
         return db.query("SELECT pinhash FROM cards WHERE cardnumber=?", [cardnumber], callback);
     },
 
-    //kortin väärän yrityksen päivitys id:n perusteella
-    updateWrongAttempt: function(wrong_attempts, id, callback) {
-        return db.query("UPDATE cards SET wrong_attempts=? WHERE idcard=?", [wrong_attempts, id], callback);
+    //kortin väärän yrityksen päivitys kortin numeron perusteella (sama kun loginissa)
+    updateWrongAttempt: function(wrong_attempts, cardnumber, callback) {
+        return db.query("UPDATE cards SET wrong_attempts=? WHERE cardnumber=?", [wrong_attempts, cardnumber], callback);
     },
 
+    checkLockStatus: function(cardnumber, callback) {
+        return db.query("SELECT islocked FROM cards WHERE cardnumber=?", [cardnumber], callback);
+    },
     
 }
 
