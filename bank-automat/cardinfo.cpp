@@ -3,6 +3,7 @@
 #include "accountdata.h"
 #include "withdrawcash.h"
 #include "transfer.h"
+#include "historywindow.h"
 
 cardInfo::cardInfo(QWidget *parent) : QDialog(parent),ui(new Ui::cardInfo)
 {
@@ -51,5 +52,17 @@ void cardInfo::on_btnTransfer_clicked()
     // Tilisiirrot-nappia painettu
     Transfer *objTransfer = new Transfer(this);
     objTransfer->open();
+}
+
+
+void cardInfo::on_btnHistory_clicked()
+{
+    accountData *objAccountData=new accountData(this);
+    objAccountData->setUsername(username);
+    objAccountData->setMyToken(myToken);
+
+    HistoryWindow *objHistoryWindow = new HistoryWindow(this);
+    objHistoryWindow->setAccountDataObject(objAccountData);
+    objHistoryWindow->open();
 }
 
