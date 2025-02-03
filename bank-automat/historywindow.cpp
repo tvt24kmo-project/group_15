@@ -48,6 +48,9 @@ void HistoryWindow::on_btnUpdateTransactions_clicked()
     //qDebug()<<"json läpäisi ";
     //qDebug()<<jsonObj;
     //qDebug()<<transactionsUrl;
+    
+
+    // Vaihda tässä getUsername() tai getAccountIban() sen mukaan mikä versio tietokannasta itsellä on
     QNetworkRequest request(transactionsUrl+myAccountDataObject->getUsername()+"/"+listaa);
     //qDebug() << "Final URL: " << transactionsUrl + myAccountDataObject->getUsername() + "/" + listaa;
 
