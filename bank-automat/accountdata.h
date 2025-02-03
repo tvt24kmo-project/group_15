@@ -28,6 +28,8 @@ public:
     QByteArray getMyToken();
 
     QString getUsername() const;
+    
+    QString getAccountIban() const;  // Added getAccountIban declaration
 
 private slots:
     void showDataSlot(QNetworkReply *reply);

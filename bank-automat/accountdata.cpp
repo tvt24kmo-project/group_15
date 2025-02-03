@@ -83,3 +83,8 @@ QByteArray accountData::getMyToken()
 {
     return myToken;
 }
+
+QString accountData::getAccountIban() const
+{
+    return ui->labelAccountiban->text();
+}
