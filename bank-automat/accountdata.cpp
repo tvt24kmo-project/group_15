@@ -40,6 +40,11 @@ void accountData::fetchData()
     reply = dataManager->get(request);
 }
 
+QString accountData::getUsername() const
+{
+    return username;
+}
+
 void accountData::showDataSlot(QNetworkReply *reply)
 {
       qDebug()<<"show data SLOT";

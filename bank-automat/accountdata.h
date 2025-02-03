@@ -27,6 +27,8 @@ public:
 
     QByteArray getMyToken();
 
+    QString getUsername() const;
+
 private slots:
     void showDataSlot(QNetworkReply *reply);
     void fetchData();

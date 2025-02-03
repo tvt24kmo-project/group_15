@@ -12,10 +12,12 @@ SOURCES += \
     accountdata.cpp \
     cardinfo.cpp \
     environment.cpp \
+    historywindow.cpp \
     imagefetcher.cpp \
     login.cpp \
     main.cpp \
     mainwindow.cpp \
+    transactiondata.cpp \
     transfer.cpp \
     withdrawcash.cpp
 
@@ -23,15 +25,18 @@ HEADERS += \
     accountdata.h \
     cardinfo.h \
     environment.h \
+    historywindow.h \
     imagefetcher.h \
     login.h \
     mainwindow.h \
+    transactiondata.h \
     transfer.h \
     withdrawcash.h
 
 FORMS += \
     accountdata.ui \
     cardinfo.ui \
+    historywindow.ui \
     login.ui \
     mainwindow.ui \
     transfer.ui \
