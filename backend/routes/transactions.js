@@ -62,4 +62,15 @@ router.get('/:id', function (req, res) {
     });
 });
 
+// näytä 5 kappaleen historia trasactions.accountiban perusteella
+router.get('/:id/:number?', function (req, res) {
+    transactions.getLimitedIbanHistory(req.params.id, req.params.number, function (err, result) {
+        if (err) {
+            res.json(err);
+        } else {
+            res.json(result);
+        }
+    });
+});
+
 module.exports = router;

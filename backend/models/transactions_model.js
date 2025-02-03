@@ -1,5 +1,6 @@
 const db = require('../database');
 
+
 const transactions = {
     // Hae kaikki tapahtumat
     getAllTransactions: function (callback) {
@@ -25,9 +26,14 @@ const transactions = {
     getIbanHistory: function (account_id, callback) {
         return db.query("SELECT DATE_FORMAT(transaction_date, '%d.%m.%Y %H:%i:%s') AS 'aika', account_id AS 'tililtä', amount AS 'määrä', accounts.balance AS 'saldo', \
             transaction_type AS 'tapahtuma' from transactions JOIN accounts ON transactions.account_id = accounts.idaccount \
-            WHERE accounts.accountiban = ?;", [account_id], callback);
-    }
-
+             WHERE accounts.accountiban = ? ORDER BY transaction_date DESC;", [account_id], callback);
+    },
+    getLimitedIbanHistory: function (account_id, offset, callback) {
+        offset = parseInt(offset, 10);
+        return db.query("SELECT DATE_FORMAT(transaction_date, '%d.%m.%Y %H:%i:%s') AS 'aika', account_id AS 'tililtä', amount AS 'määrä', accounts.balance AS 'saldo', \
+            transaction_type AS 'tapahtuma' from transactions JOIN accounts ON transactions.account_id = accounts.idaccount \
+            WHERE accounts.accountiban = ? ORDER BY transaction_date DESC LIMIT 5 OFFSET ?;", [account_id, offset], callback);
+        }        
     
 }
 
