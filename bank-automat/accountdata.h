@@ -29,7 +29,7 @@ public:
 
     QString getUsername() const;
     
-    QString getAccountIban() const;  // Added getAccountIban declaration
+    QString getAccountIban() const;
 
 private slots:
     void showDataSlot(QNetworkReply *reply);
