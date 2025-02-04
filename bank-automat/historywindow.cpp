@@ -51,6 +51,7 @@ void HistoryWindow::on_btnUpdateTransactions_clicked()
     
 
     // Vaihda tässä getUsername() tai getAccountIban() sen mukaan mikä versio tietokannasta itsellä on
+    // jos käytät linux serveriä, pitää olla getAccountIban
     QNetworkRequest request(transactionsUrl+myAccountDataObject->getUsername()+"/"+listaa);
     //qDebug() << "Final URL: " << transactionsUrl + myAccountDataObject->getUsername() + "/" + listaa;
 
