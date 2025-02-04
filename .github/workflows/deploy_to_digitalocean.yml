@@ -1,7 +1,9 @@
 name: Deploy to digitalocean
 
 on:
-  push:
+  pull_request:
+    branches:
+      - main
     paths:
       - "backend/**"
       - ".github/workflows/deploy_to_digitalocean.yml"
