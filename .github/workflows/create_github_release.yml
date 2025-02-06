@@ -1,0 +1,117 @@
+name: Build and Release Bank-Automat
+
+on:
+  push:
+    branches: [ main, automaticrelease ]
+    paths:
+      - 'bank-automat/**' # jos tulee muutoksia bank-automat kansioon niin ajetaan 
+      - '.github/workflows/create_github_release.yml' # jos tulee muutoksia tähän tiedostoon niin ajetaan
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest # buildataan windowsista
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.11.9 # asennetaan tietty versio koska qt actionssin vakio py versio ei toimi (liian uusi)
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11.9'
+
+      - name: Confirm Python version # tarkistetaan
+        run: python --version
+
+      - name: Upgrade pip and wheel # päivitetään pip ja wheel
+        run: python -m pip install --upgrade pip wheel
+
+      - name: Install Qt 6.8.2 with MinGW 64-bit
+        uses: jurplel/install-qt-action@v4 
+        with:
+          version: '6.8.2' # sama kun oma qt terveisin jesse, varmaan menee rikki muilla jos on tästä kiinni...
+          host: 'windows' # rakennetaan windowsille
+          target: 'desktop' # desktop app
+          arch: 'win64_mingw' # juu 
+          install-deps: true # asennetaan riippuvuudet
+          cache: false # ei cachea
+          tools-only: false # ei vain työkaluja vaan koko paketti
+          set-env: true # asetetaan ympäristömuuttujat 
+          setup-python: false # ei asenneta pythonia koska asennettiin jo versio joka toimii
+          tools: 'tools_mingw1310' # asennetaan tarkka mingw versio (sama mikä tulee qt 6.8.2 mukana)
+
+      - name: Debug Environment Variables # tarkistetaan ympäristömuuttujat jos ongelmia
+        run: |
+          echo "PATH: %PATH%"
+        shell: cmd
+
+      - name: Check MinGW Version # tarkistetaan mingw versio, pitäisi olla sama kun qtn version mukana tuleva tässä tapauksessa 13.1.0
+        shell: cmd
+        run: |
+            g++ --version
+
+      - name: Clean and Create Build Directory # poistetaan vanha build ja luodaan uusi tilalle 
+        working-directory: bank-automat
+        shell: pwsh
+        run: |
+          Remove-Item -Recurse -Force build -ErrorAction SilentlyContinue
+          New-Item -ItemType Directory -Force -Path build
+
+      - name: Remove qmake stash file # poistetaan qmake stash file jos sellainen on olemassa
+        working-directory: bank-automat/build
+        shell: cmd
+        run: |
+          if exist .qmake.stash del .qmake.stash
+
+      - name: Run qmake and check for immediate errors # ajetaan qmake ja tarkistetaan onko virheitä
+        working-directory: bank-automat/build
+        shell: pwsh
+        run: |
+          echo Running qmake...
+          qmake ..\bank-automat.pro -spec win32-g++ "CONFIG+=release"
+          if ($LASTEXITCODE -ne 0) {
+            echo "qmake failed with error code $LASTEXITCODE"
+            exit 1
+          }
+
+      - name: Build project with mingw32-make (VERBOSE) # rakennetaan projekti
+        working-directory: bank-automat/build
+        run: mingw32-make -j16 VERBOSE=1
+        shell: cmd
+
+      - name: Deploy Qt dependencies (Verbose) # asennetaan qt riippuvuudet windeployqtllä (asentaa dll:t) ja verbosella taas
+        working-directory: bank-automat/build/release
+        run: |
+          echo Running windeployqt with verbose output...
+          windeployqt.exe bank-automat.exe
+        shell: cmd
+
+      - name: Archive release directory # pakataan release kansio zipiksi 
+        run: Compress-Archive -Path "bank-automat/build/release/*" -DestinationPath release.zip
+        shell: pwsh
+
+      - name: Get recent commit messages # haetaan 10 viimeisintä commit viestiä
+        id: get_commit_messages
+        shell: pwsh
+        run: |
+          $messages = git log -n 10 --pretty=format:"* %s"
+          Write-Host "Commit messages:`n$messages"
+          echo "body=$messages" >> $env:GITHUB_OUTPUT
+
+      - name: Create GitHub Release # luodaan github release zipillä
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: "build-${{ github.run_number }}"
+          name: "Bank-Automat Release Build #${{ github.run_number }}"
+          body: ${{ steps.get_commit_messages.outputs.body }}
+          draft: false
+          prerelease: false
+          files: release.zip
+
+          
