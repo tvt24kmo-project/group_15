@@ -10,6 +10,8 @@ transactiondata::transactiondata(QString transactionDateTime, QString accountIba
     transaction_type = transactionType;
     amount = a;
     balance = b;
+
+
 }
 
 QString transactiondata::getAccount_iban() const

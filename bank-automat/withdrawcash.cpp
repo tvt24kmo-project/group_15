@@ -7,6 +7,13 @@ WithdrawCash::WithdrawCash(QWidget *parent)
     , ui(new Ui::WithdrawCash)
 {
     ui->setupUi(this);
+
+    // Luo ajastin ikkunalle
+    timeoutTimer = new QTimer(this);
+    timeoutTimer->setInterval(10000);
+    timeoutTimer->start();
+    // Kun aikakatkaisu tapahtuu, tämä ikkuna sulkeutuu
+    connect(timeoutTimer, &QTimer::timeout, this, &WithdrawCash::close);
 }
 
 void WithdrawCash::setAccountDataObject(accountData *dataObj)
@@ -21,6 +28,8 @@ WithdrawCash::~WithdrawCash()
 
 void WithdrawCash::on_buttonOther_clicked()
 {
+    timeoutTimer->start();  // Käynnistetään ajastin uudelleen
+
     QString Qamount = ui->lineEditCustomAmount->text(); // haetaan muun rahamäärän luku
     qDebug()<<"Käytetään muuta määrää: " + Qamount + "€"; // tieto konsoliin seurantaa varten
 
@@ -61,6 +70,8 @@ void WithdrawCash::on_buttonOther_clicked()
 
 void WithdrawCash::on_button20_clicked()
 {
+    timeoutTimer->start();  // Käynnistetään ajastin uudelleen
+
     cashAmount = 20;
     ui->labelAmount->setText("20");
 }
@@ -68,6 +79,8 @@ void WithdrawCash::on_button20_clicked()
 
 void WithdrawCash::on_button40_clicked()
 {
+    timeoutTimer->start();  // Käynnistetään ajastin uudelleen
+
     cashAmount = 40;
     ui->labelAmount->setText("40");
 }
@@ -75,6 +88,8 @@ void WithdrawCash::on_button40_clicked()
 
 void WithdrawCash::on_button50_clicked()
 {
+    timeoutTimer->start();  // Käynnistetään ajastin uudelleen
+
     cashAmount = 50;
     ui->labelAmount->setText("50");
 }
@@ -82,6 +97,8 @@ void WithdrawCash::on_button50_clicked()
 
 void WithdrawCash::on_button100_clicked()
 {
+    timeoutTimer->start();  // Käynnistetään ajastin uudelleen
+
     cashAmount = 100;
     ui->labelAmount->setText("100");
 }
@@ -89,6 +106,8 @@ void WithdrawCash::on_button100_clicked()
 
 void WithdrawCash::on_withdrawCash_clicked()
 {
+    timeoutTimer->start();  // Käynnistetään ajastin uudelleen
+
     if(cashAmount < 0) // jos yrittää negatiivista lukua
     {
         QErrorMessage *errorMessage = new QErrorMessage(this);
@@ -119,7 +138,7 @@ void WithdrawCash::on_withdrawCash_clicked()
 }
 
 void WithdrawCash::sendWithdrawRequest(int amount)
-{
+{   
     QJsonObject jsonObj;
     if (myAccountDataObject)
     {

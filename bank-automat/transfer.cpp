@@ -6,6 +6,14 @@ Transfer::Transfer(QWidget *parent)
     , ui(new Ui::Transfer)
 {
     ui->setupUi(this);
+
+    // Luo ajastin ikkunalle
+    timeoutTimer = new QTimer(this);
+    timeoutTimer->setInterval(10000);
+    timeoutTimer->start();
+    // Kun aikakatkaisu tapahtuu, tämä ikkuna sulkeutuu
+    connect(timeoutTimer, &QTimer::timeout, this, &Transfer::close);
+
 }
 
 Transfer::~Transfer()
@@ -14,6 +22,8 @@ Transfer::~Transfer()
 }
 
 void Transfer::on_btnCompleteTransfer_clicked() {
+    timeoutTimer->start();  // Käynnistetään ajastin uudelleen
+
     QString receiverAccount = ui->lineReceiver->text();
     double transferAmount = ui->lineTransferAmount->text().toDouble();
     if(transferAmount < 0) { // Jos yrittää negatiivista siirtoa

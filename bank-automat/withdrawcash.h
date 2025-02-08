@@ -9,7 +9,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QMessageBox>
-
+#include <QTimer>
 
 #include "environment.h"
 #include "accountdata.h"
@@ -44,6 +44,7 @@ private:
     QString withdrawUrl = Environment::base_url() + "/procedures/withdraw";
     void sendWithdrawRequest(int amount);
     accountData* myAccountDataObject = nullptr;
+    QTimer *timeoutTimer;
 };
 
 #endif // WITHDRAWCASH_H
