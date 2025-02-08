@@ -96,6 +96,7 @@ jobs:
         run: |
           Get-ChildItem -Path . -Filter "*.cpp" | Remove-Item -Force
           Get-ChildItem -Path . -Filter "*.o" | Remove-Item -Force
+          Get-ChildItem -Path . -Filter "*.h" | Remove-Item -Force
           Remove-Item -Path "object_script.bank-automat.Release" -Force -ErrorAction SilentlyContinue
 
       - name: Archive release directory # pakataan release kansio zipiksi 
