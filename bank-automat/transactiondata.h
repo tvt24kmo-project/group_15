@@ -1,9 +1,8 @@
 #ifndef TRANSACTIONDATA_H
 #define TRANSACTIONDATA_H
 
-#include "qtimer.h"
 #include <QString>
-#include <QTimer>
+
 class transactiondata
 {
 public:
@@ -25,7 +24,6 @@ private:
     QString transaction_type;
     QString amount;
     QString balance;
-    QTimer *timeoutTimer;
 };
 
 #endif // TRANSACTIONDATA_H
