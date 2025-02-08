@@ -8,7 +8,7 @@
 #include "transactiondata.h"
 #include "accountdata.h"
 #include "environment.h"
-
+#include <QTimer>
 namespace Ui {
 class HistoryWindow;
 }
@@ -48,6 +48,7 @@ private:
     QString transactionsUrl = Environment::base_url() + "/transactions/";
     //QString username;
     //QByteArray myToken;
+    QTimer *timeoutTimer;
 
 };
 

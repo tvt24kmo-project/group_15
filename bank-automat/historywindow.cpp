@@ -14,6 +14,12 @@ HistoryWindow::HistoryWindow(QWidget *parent)
     , ui(new Ui::HistoryWindow)
 {
     ui->setupUi(this);
+    // Luo ajastin ikkunalle
+    timeoutTimer = new QTimer(this);
+    timeoutTimer->setInterval(10000);
+    timeoutTimer->start();
+    // Kun aikakatkaisu tapahtuu, tämä ikkuna sulkeutuu
+    connect(timeoutTimer, &QTimer::timeout, this, &cardInfo::close);
 }
 void HistoryWindow::setAccountDataObject(accountData *accountData)
 {
@@ -28,7 +34,7 @@ HistoryWindow::~HistoryWindow()
 
 void HistoryWindow::on_btnUpdateTransactions_clicked()
 {
-
+    timeoutTimer->start();
     //Testauksen jälkeen base url environmentista
     //qDebug()<<"Transactionin sivu: ";
     //qDebug()<<transactionsUrl;
@@ -125,6 +131,7 @@ void HistoryWindow::getTransactionsSlot (QNetworkReply *reply)
 
 void HistoryWindow::on_btnReadNext_clicked()
 {
+    timeoutTimer->start(); // nollaa aika
 
     if (response_data.length() < 300){
     } else {
@@ -140,6 +147,8 @@ void HistoryWindow::on_btnReadNext_clicked()
 
 void HistoryWindow::on_btnReadPrev_clicked()
 {
+    timeoutTimer->start(); // // Käynnistetään ajastin uudelleen
+
     if (listaa.toInt() <= 0){
     } else {
         int num = listaa.toInt();

@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include <QDebug>
-
+#include <QTimer>
 namespace Ui {
 class Transfer;
 }
@@ -21,6 +21,7 @@ private slots:
 
 private:
     Ui::Transfer *ui;
+    QTimer *timeoutTimer;
 };
 
 #endif // TRANSFER_H

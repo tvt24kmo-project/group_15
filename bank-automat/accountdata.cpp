@@ -6,7 +6,12 @@
 accountData::accountData(QWidget *parent) : QDialog(parent), ui(new Ui::accountData)
 {
     ui->setupUi(this);
-
+    // Luo ajastin ikkunalle
+    timeoutTimer = new QTimer(this);
+    timeoutTimer->setInterval(10000);
+    timeoutTimer->start();
+    // Kun aikakatkaisu tapahtuu, tämä ikkuna sulkeutuu
+    connect(timeoutTimer, &QTimer::timeout, this, &accountData::close);
 }
 
 accountData::~accountData()
