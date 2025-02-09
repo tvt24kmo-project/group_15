@@ -33,7 +33,7 @@ private:
     QTimer *timeoutTimer;
     int checkCardType(); // 0 = normi, 1 = multi
     int checkCardStatus(); // 0 = ei lukittu, 1 = lukittu
-    int wrongAttemptsCounter=0; // seurataan montako kertaa väärä tunnus/salasana on syötetty
+    int wrongAttemptsCounter; // seurataan montako kertaa väärä tunnus/salasana on syötetty
     int fetchAttempts(); // haetaan jo olemassa olevien väärin syötettyjen yritysten määrä (jos käynnistetään uudelleen tai yritetään joskus myöhemmin)
     void sendAttemptToServer(int wrongAttmept); // lähetetään palvelimelle tieto väärästä tunnuksesta/salasanasta
 };

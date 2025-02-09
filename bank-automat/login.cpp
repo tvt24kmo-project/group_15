@@ -51,7 +51,7 @@ int login::checkCardType()
         if(json_obj["account_type"].toString() == "Multi")
         {
             cardType = 1;
-            qDebug()<<"multi kortti tunnistettu";
+            // qDebug()<<"multi kortti tunnistettu";
         }
     });
 
@@ -92,7 +92,7 @@ int login::checkCardStatus()
         {
             QJsonObject json_obj = jsonArray[0].toObject();
             cardStatus = json_obj["islocked"].toInt();
-            qDebug()<<"Kortin lukitus status: " << cardStatus;
+            // qDebug()<<"Kortin lukitus status: " << cardStatus;
         }
     });
 
@@ -110,8 +110,6 @@ int login::fetchAttempts()
     // qDebug()<<url;
 
     QNetworkRequest request(url);
-    request.setRawHeader("Authorization", myToken);
-    qDebug()<< "Tokeni fetchAttemptsissa: " << myToken;
 
     QEventLoop loop;
     postManager = new QNetworkAccessManager(this);
@@ -119,9 +117,18 @@ int login::fetchAttempts()
     connect(postManager, &QNetworkAccessManager::finished, &loop, &QEventLoop::quit);
     connect(postManager, &QNetworkAccessManager::finished, this,  [&attempts](QNetworkReply *reply) {
         QByteArray response_data = reply->readAll();
-        qDebug()<<"response_data" << response_data;
+        // qDebug()<<"response_data" << response_data;
+        // response_data "[{\"wrong_attempts\":0}]"
 
+        QJsonDocument json_doc = QJsonDocument::fromJson(response_data); // luodaan QJsonDocument vastauksesta
+        QJsonArray jsonArray = json_doc.array(); // viedään vastaus QJsonObjectiin
 
+        if (!jsonArray.isEmpty())
+        {
+            QJsonObject json_obj = jsonArray[0].toObject();
+            attempts = json_obj["wrong_attempts"].toInt();
+            // qDebug()<<"Väärät yritykset (jsonarray): " << attempts;
+        }
     });
 
     reply = postManager->get(request);
@@ -129,6 +136,7 @@ int login::fetchAttempts()
 
 
     // lähetä pyyntö serverille joka palauttaa väärien yritysten määrän, aseta muuttujaan attempts
+    // qDebug()<<"FetchAttempts palauttaa arvon: " << attempts;
     return attempts;
 }
 
@@ -199,6 +207,7 @@ void login::loginSlot(QNetworkReply *reply)
 
 
                 int cardLockStatus = checkCardStatus();
+                qDebug() << "Kortin lukitus status: " << cardLockStatus;
                 if (cardLockStatus == 1)
                 {
                     // tee joku järkevämpi pop up ikkuna tms, tämä ajaa asiansa testauksessa
@@ -221,7 +230,7 @@ void login::loginSlot(QNetworkReply *reply)
                     delay(); // 10 sekunnin viive, eli ei avaa objCardInfo->Open ikkunaa heti perään
                 }
 
-                else if (cardType == 1 && cardLockStatus == 0)// jos ei ole käytössä multi kortti ja kortti ei ole lukossa, avataan liittymä
+                else if (cardType == 0 && cardLockStatus == 0)// jos ei ole käytössä multi kortti ja kortti ei ole lukossa, avataan liittymä
                 {
                     objCardInfo->open();
                 }
@@ -230,8 +239,13 @@ void login::loginSlot(QNetworkReply *reply)
             else {
                 ui->labelInfo->setText("Väärä tunnus/salasana");
                 qDebug()<<"Väärä tunnus/salasana";
-                qDebug()<<"väärien yritysten määrä : " + wrongAttemptsCounter;
+
+                //wrongattemptscounter alustetaan vasta tässä
                 wrongAttemptsCounter = fetchAttempts(); // haetaan jo olemassa olevien väärin syötettyjen yritysten määrä (jos käynnistetään uudelleen tai yritetään joskus myöhemmin)
+                qDebug() << "väärien yritysten määrä (palautuksen jälkeen):" << wrongAttemptsCounter;
+                wrongAttemptsCounter++; // kasvatetaan väärien yritysten määrää
+                qDebug() << "väärien yritysten määrä (palautuksen ja +1 jälkeen):" << wrongAttemptsCounter;
+
 
                 // sendAttemptToServer(wrongAttemptsCounter); // lähetetään väärän yrityksen numero serverille
             }
