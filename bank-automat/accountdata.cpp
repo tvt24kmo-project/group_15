@@ -6,7 +6,12 @@
 accountData::accountData(QWidget *parent) : QDialog(parent), ui(new Ui::accountData)
 {
     ui->setupUi(this);
-
+    // Luo ajastin ikkunalle
+    timeoutTimer = new QTimer(this);
+    timeoutTimer->setInterval(10000);
+    timeoutTimer->start();
+    // Kun aikakatkaisu tapahtuu, tämä ikkuna sulkeutuu
+    connect(timeoutTimer, &QTimer::timeout, this, &accountData::close);
 }
 
 accountData::~accountData()
@@ -38,6 +43,11 @@ void accountData::fetchData()
     connect(dataManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(showDataSlot(QNetworkReply*)));
 
     reply = dataManager->get(request);
+}
+
+QString accountData::getUsername() const
+{
+    return username;
 }
 
 void accountData::showDataSlot(QNetworkReply *reply)
@@ -77,4 +87,9 @@ int accountData::getAccountId()
 QByteArray accountData::getMyToken()
 {
     return myToken;
+}
+
+QString accountData::getAccountIban() const
+{
+    return ui->labelAccountiban->text();
 }

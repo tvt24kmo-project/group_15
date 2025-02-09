@@ -8,6 +8,13 @@ login::login(QWidget *parent)
     , ui(new Ui::login)
 {
     ui->setupUi(this);
+
+    // Luo ajastin ikkunalle
+    timeoutTimer = new QTimer(this);
+    timeoutTimer->setInterval(30000);
+    timeoutTimer->start();
+    // Kun aikakatkaisu tapahtuu, tämä ikkuna sulkeutuu
+    connect(timeoutTimer, &QTimer::timeout, this, &login::close);
 }
 
 login::~login()
@@ -15,8 +22,14 @@ login::~login()
     delete ui;
 }
 
+void login::onWindowFinished()
+{
+    timeoutTimer->start();
+}
+
 void login::on_btnLogin_clicked()
 {
+    timeoutTimer->start();
 
     QJsonObject jsonObj;
     jsonObj.insert("cardnumber",ui->textUsername->text());
@@ -45,11 +58,14 @@ void login::loginSlot(QNetworkReply *reply)
         }
         else {
             if(response_data!="false" && response_data.length()>20) {
+                timeoutTimer->stop(); // lopeta ajastin
+
                 ui->labelInfo->setText("Kirjautuminen OK");
                 QByteArray myToken="Bearer "+response_data;
                 cardInfo *objCardInfo= new cardInfo(this);
                 objCardInfo->setUsername(ui->textUsername->text());
                 objCardInfo->setMyToken(myToken);
+                connect(objCardInfo, &QDialog::finished, this, &login::onWindowFinished);
                 objCardInfo->open();
             }
             else {

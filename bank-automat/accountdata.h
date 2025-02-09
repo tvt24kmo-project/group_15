@@ -5,6 +5,8 @@
 #include <QtNetwork>
 #include <QNetworkAccessManager>
 #include <QJsonDocument>
+#include <QTimer>
+
 namespace Ui {
 class accountData;
 }
@@ -27,6 +29,10 @@ public:
 
     QByteArray getMyToken();
 
+    QString getUsername() const;
+    
+    QString getAccountIban() const;
+
 private slots:
     void showDataSlot(QNetworkReply *reply);
     void fetchData();
@@ -40,6 +46,7 @@ private:
     QByteArray response_data;
 
     int accountId = 0;
+    QTimer *timeoutTimer;
 };
 
 #endif // ACCOUNTDATA_H

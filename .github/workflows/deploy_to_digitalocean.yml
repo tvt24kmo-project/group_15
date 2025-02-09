@@ -2,6 +2,8 @@ name: Deploy to digitalocean
 
 on:
   push:
+    branches:
+      - main
     paths:
       - "backend/**"
       - ".github/workflows/deploy_to_digitalocean.yml"
@@ -34,7 +36,7 @@ jobs:
 
     - name: Restart Node.js application
       run: |
-        pm2 restart backend || (pm2 start app.js --name backend --cwd /home/jesse/actions-runner/_work/group_15/group_15/backend && pm2 save)
+        pm2 restart backend || (pm2 start /home/jesse/actions-runner/_work/group_15/group_15/backend/bin/www --name backend && pm2 save)
 
     - name: Restart Apache
       run: sudo systemctl restart apache2
