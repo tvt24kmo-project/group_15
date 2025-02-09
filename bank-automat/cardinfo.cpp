@@ -32,7 +32,7 @@ void cardInfo::setUsername(const QString &newUsername)
 void cardInfo::setMyToken(const QByteArray &newMyToken)
 {
     myToken = newMyToken;
-    qDebug()<<myToken;
+    // qDebug()<<myToken;
 }
 
 void cardInfo::onWindowFinished(){

@@ -27,7 +27,7 @@ login::~login()
 int login::checkCardType()
 {
     int cardType=0; // kortti on oletuksena normaali ellei tunnisteta multi kortiksi
-    qDebug()<<"checkCardType";
+    // qDebug()<<"checkCardType";
     QString url =  Environment::base_url()+"/procedures/getAccountType/";
     QNetworkRequest request(url);
 
@@ -51,7 +51,7 @@ int login::checkCardType()
         if(json_obj["account_type"].toString() == "Multi")
         {
             cardType = 1;
-            qDebug()<<"multi kortti tunnistettu json vastauksesta";
+            qDebug()<<"multi kortti tunnistettu";
         }
     });
 
@@ -69,7 +69,7 @@ int login::checkCardType()
 int login::checkCardStatus()
 {
     int cardStatus = 0;
-    qDebug()<<"checkCardStatus";
+    // qDebug()<<"checkCardStatus";
     QString url = Environment::base_url()+"/cards/check-lock-status/"+ui->textUsername->text();
     QNetworkRequest request(url);
 
@@ -102,6 +102,21 @@ int login::checkCardStatus()
     return cardStatus;
 }
 
+int login::fetchAttempts()
+{
+    int attempts = 0;
+    QString url = Environment::base_url()+"/cards/get-card-attempts/"+ui->textUsername->text();
+    // lähetä pyyntö serverille joka palauttaa väärien yritysten määrän, aseta muuttujaan
+    return attempts;
+}
+
+void login::sendAttemptToServer(int wrongAttmept)
+{
+    qDebug()<<"sendAttemptToServer";
+    QString url = Environment::base_url()+"/cards/update-card-attempts/"+ui->textUsername->text();
+    qDebug()<<url;
+}
+
 
 
 
@@ -119,7 +134,7 @@ void login::on_btnLogin_clicked()
     jsonObj.insert("pinhash",ui->textPassword->text());
 
     QString site_url=Environment::base_url()+"/login";
-    qDebug()<<site_url;
+    // qDebug()<<site_url;
     QNetworkRequest request(site_url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     postManager = new QNetworkAccessManager(this);
@@ -158,7 +173,7 @@ void login::loginSlot(QNetworkReply *reply)
 
                 // tokeni talteen luokan sisälle
                 myToken="Bearer "+response_data; // ei luoda erillistä QByteArrayta vaan käytetään privatessa olevaa
-                qDebug()<<"token tallennettu private muuttujaan: " << myToken;
+                // qDebug()<<"token tallennettu private muuttujaan: " << myToken;
 
 
                 int cardLockStatus = checkCardStatus();
@@ -192,6 +207,11 @@ void login::loginSlot(QNetworkReply *reply)
             }
             else {
                 ui->labelInfo->setText("Väärä tunnus/salasana");
+                qDebug()<<"Väärä tunnus/salasana";
+                qDebug()<<"väärien yritysten määrä : " + wrongAttemptsCounter;
+                //wrongAttemptsCounter = fetchAttempts(); // haetaan jo olemassa olevien väärin syötettyjen yritysten määrä (jos käynnistetään uudelleen tai yritetään joskus myöhemmin)
+
+                sendAttemptToServer(wrongAttemptsCounter); // lähetetään väärän yrityksen numero serverille
             }
 
         }
