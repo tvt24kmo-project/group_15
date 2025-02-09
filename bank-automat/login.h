@@ -25,6 +25,8 @@ private slots:
 private:
     Ui::login *ui;
 
+    QByteArray myToken; // tallennetaan tokeni tähän (käytetään kortin tarkistuksessa ENNEN varsinaista kirjautumista)
+
     QNetworkAccessManager *postManager;
     QNetworkReply *reply;
     QByteArray response_data;

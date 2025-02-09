@@ -26,32 +26,80 @@ login::~login()
 
 int login::checkCardType()
 {
-    int lockstatus=0;
+    int cardType=0; // kortti on oletuksena normaali ellei tunnisteta multi kortiksi
     qDebug()<<"checkCardType";
-    QString url =  Environment::base_url()+"/procedures/getAccountType/"+ui->textUsername->text();
+    QString url =  Environment::base_url()+"/procedures/getAccountType/";
+    QNetworkRequest request(url);
+
+    request.setRawHeader("Authorization", myToken);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    // qDebug()<< "Tokeni checkCardTypessä: " << myToken;
+
+    QEventLoop loop;
+    postManager = new QNetworkAccessManager(this);
+
+    connect(postManager, &QNetworkAccessManager::finished, &loop, &QEventLoop::quit);
+    connect(postManager, &QNetworkAccessManager::finished, this,  [&cardType](QNetworkReply *reply) {
+        QByteArray response_data = reply->readAll();
+        qDebug()<<"response_data" << response_data;
 
 
-    // if reply == 'multi' -> kysy tiliä -> joku mysql proseduuri / backend logiikka jolla valitaan oikea tili.
+        // puretaan vastaus palasiksi: {"account_type":"multi"}
+        QJsonDocument json_doc = QJsonDocument::fromJson(response_data); // luodaan QJsonDocument vastauksesta
+        QJsonObject json_obj = json_doc.object(); // viedään vastaus QJsonObjectiin
 
-    return lockstatus;
+        if(json_obj["account_type"].toString() == "Multi")
+        {
+            cardType = 1;
+            qDebug()<<"multi kortti tunnistettu json vastauksesta";
+        }
+    });
+
+
+    QJsonObject jsonObj;
+    jsonObj.insert("account_id",ui->textUsername->text());
+
+    // lähetetään POST requesti JSON bodyllä
+    reply = postManager->post(request, QJsonDocument(jsonObj).toJson());
+    loop.exec();
+
+    return cardType;
 }
 
 int login::checkCardStatus()
 {
     int cardStatus = 0;
-
     qDebug()<<"checkCardStatus";
     QString url = Environment::base_url()+"/cards/check-lock-status/"+ui->textUsername->text();
     QNetworkRequest request(url);
-    postManager = new QNetworkAccessManager(this);
-    connect(postManager,SIGNAL(finished(QNetworkReply*)), this, SLOT(loginSlot(QNetworkReply*)));
-    reply = postManager->get(request);
-    
-    qDebug()<<"reply";
-    qDebug()<<reply->readAll();
-    
-    return cardStatus;
 
+    request.setRawHeader("Authorization", myToken);
+    // qDebug()<< "Tokeni checkCardStatusissa: " << myToken;
+
+    QEventLoop loop;
+    postManager = new QNetworkAccessManager(this);
+    
+    connect(postManager, &QNetworkAccessManager::finished, &loop, &QEventLoop::quit);
+    connect(postManager, &QNetworkAccessManager::finished, this,  [&cardStatus](QNetworkReply *reply) {
+        QByteArray response_data = reply->readAll();
+        qDebug()<<"response_data" << response_data;
+
+
+        QJsonDocument json_doc = QJsonDocument::fromJson(response_data); // luodaan QJsonDocument vastauksesta
+        QJsonArray jsonArray = json_doc.array(); // viedään vastaus QJsonObjectiin
+
+        if (!jsonArray.isEmpty())
+        {
+            QJsonObject json_obj = jsonArray[0].toObject();
+            cardStatus = json_obj["islocked"].toInt();
+            qDebug()<<"Kortin lukitus status: " << cardStatus;
+        }
+    });
+
+    reply = postManager->get(request);
+    loop.exec();
+
+    return cardStatus;
 }
 
 
@@ -107,34 +155,36 @@ void login::loginSlot(QNetworkReply *reply)
                 timeoutTimer->stop(); // lopeta ajastin
 
                 ui->labelInfo->setText("Kirjautuminen OK");
-                QByteArray myToken="Bearer "+response_data;
+
+                // tokeni talteen luokan sisälle
+                myToken="Bearer "+response_data; // ei luoda erillistä QByteArrayta vaan käytetään privatessa olevaa
+                qDebug()<<"token tallennettu private muuttujaan: " << myToken;
+
+
+                int cardLockStatus = checkCardStatus();
+                if (cardLockStatus == 1)
+                {
+                    // tee joku järkevämpi pop up ikkuna tms, tämä ajaa asiansa testauksessa
+                    ui->labelInfo->setText("Kortti on lukittu");
+                    return;
+                }
+                
+                int cardType = checkCardType();
+
                 cardInfo *objCardInfo= new cardInfo(this);
                 objCardInfo->setUsername(ui->textUsername->text());
                 objCardInfo->setMyToken(myToken);
                 connect(objCardInfo, &QDialog::finished, this, &login::onWindowFinished);
 
 
-
-                int cardType = 0; // koodattu = 1 arvoksi testausta varten, 1 tulisi requestistä
-                checkCardType();
-                // ennen kun avataan ikkuna, tarkistetaan kortin tilat ja tyyppi
-                int cardLockStatus = checkCardStatus();
-
-
-                if (cardLockStatus == 1) // tarkistetaan kortin lukko ennen kun avataan debit/credit liittymää (jos olisi multi kortti)
-                {
-                    // error viestin käsittely
-                }
-
-
                 if (cardType == 1)
                 {
                     DebitOrCredit *DOC = new DebitOrCredit(this);
                     DOC->open();
-                    delay(); // 10 sekunnin viive, eli ei avaa objCardInfo->Open ikkunaa
+                    delay(); // 10 sekunnin viive, eli ei avaa objCardInfo->Open ikkunaa heti perään
                 }
 
-                else // jos ei ole käytössä multi kortti ja kortti ei ole lukossa, avataan liittymä
+                else if (cardType == 1 && cardLockStatus == 0)// jos ei ole käytössä multi kortti ja kortti ei ole lukossa, avataan liittymä
                 {
                     objCardInfo->open();
                 }
