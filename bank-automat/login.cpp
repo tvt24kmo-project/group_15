@@ -140,11 +140,42 @@ int login::fetchAttempts()
     return attempts;
 }
 
-void login::sendAttemptToServer(int wrongAttmept)
+void login::sendAttemptToServer(int wrongAttempt)
 {
     qDebug()<<"sendAttemptToServer";
     QString url = Environment::base_url()+"/cards/update-card-attempts/"+ui->textUsername->text();
-    qDebug()<<url;
+    //qDebug()<<url;
+    //qDebug()<<"Väärät yritykset (sendAttemptToServer): " << wrongAttempt;
+    QNetworkRequest request(url);
+
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+    QJsonObject jsonObj;
+    jsonObj.insert("wrong_attempts",wrongAttempt);
+
+    postManager = new QNetworkAccessManager(this);
+
+
+    QEventLoop loop;
+    connect(postManager, &QNetworkAccessManager::finished, &loop, &QEventLoop::quit);
+
+    connect(postManager, &QNetworkAccessManager::finished, this,  [](QNetworkReply *reply) {
+        if (reply->error() == QNetworkReply::NoError)
+        {
+            qDebug() << "Väärä yritys lähetetty palvelimelle: " << reply->readAll();
+        }
+        else
+        {
+            qDebug() << "Väärän yrityksen lähetys epäonnistui" << reply->errorString();
+        }
+        reply->deleteLater();
+    });
+
+
+    reply = postManager->put(request, QJsonDocument(jsonObj).toJson());
+    loop.exec();
+
+    postManager->deleteLater();
 }
 
 
@@ -246,8 +277,7 @@ void login::loginSlot(QNetworkReply *reply)
                 wrongAttemptsCounter++; // kasvatetaan väärien yritysten määrää
                 qDebug() << "väärien yritysten määrä (palautuksen ja +1 jälkeen):" << wrongAttemptsCounter;
 
-
-                // sendAttemptToServer(wrongAttemptsCounter); // lähetetään väärän yrityksen numero serverille
+                sendAttemptToServer(wrongAttemptsCounter); // lähetetään väärän yrityksen numero serverille
             }
 
         }

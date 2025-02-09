@@ -35,7 +35,7 @@ private:
     int checkCardStatus(); // 0 = ei lukittu, 1 = lukittu
     int wrongAttemptsCounter; // seurataan montako kertaa väärä tunnus/salasana on syötetty
     int fetchAttempts(); // haetaan jo olemassa olevien väärin syötettyjen yritysten määrä (jos käynnistetään uudelleen tai yritetään joskus myöhemmin)
-    void sendAttemptToServer(int wrongAttmept); // lähetetään palvelimelle tieto väärästä tunnuksesta/salasanasta
+    void sendAttemptToServer(int wrongAttempt); // lähetetään palvelimelle tieto väärästä tunnuksesta/salasanasta
 };
 
 #endif // LOGIN_H
