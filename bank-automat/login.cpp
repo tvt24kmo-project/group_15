@@ -273,11 +273,17 @@ void login::loginSlot(QNetworkReply *reply)
 
                 //wrongattemptscounter alustetaan vasta tässä
                 wrongAttemptsCounter = fetchAttempts(); // haetaan jo olemassa olevien väärin syötettyjen yritysten määrä (jos käynnistetään uudelleen tai yritetään joskus myöhemmin)
-                qDebug() << "väärien yritysten määrä (palautuksen jälkeen):" << wrongAttemptsCounter;
-                wrongAttemptsCounter++; // kasvatetaan väärien yritysten määrää
-                qDebug() << "väärien yritysten määrä (palautuksen ja +1 jälkeen):" << wrongAttemptsCounter;
-
-                sendAttemptToServer(wrongAttemptsCounter); // lähetetään väärän yrityksen numero serverille
+                if (wrongAttemptsCounter == 3) // jos vääriä yrityksiä on 3, ei kasvateta laskureita enempää
+                {
+                    ui->labelInfo->setText("Kortti lukittu");
+                }
+                else
+                {
+                    qDebug() << "väärien yritysten määrä (palautuksen jälkeen):" << wrongAttemptsCounter;
+                    wrongAttemptsCounter++; // kasvatetaan väärien yritysten määrää
+                    qDebug() << "väärien yritysten määrä (palautuksen ja +1 jälkeen):" << wrongAttemptsCounter;
+                    sendAttemptToServer(wrongAttemptsCounter); // lähetetään väärän yrityksen numero serverille
+                }
             }
 
         }
