@@ -105,8 +105,30 @@ int login::checkCardStatus()
 int login::fetchAttempts()
 {
     int attempts = 0;
-    QString url = Environment::base_url()+"/cards/get-card-attempts/"+ui->textUsername->text();
-    // lähetä pyyntö serverille joka palauttaa väärien yritysten määrän, aseta muuttujaan
+    qDebug()<<"\n\nfetchAttempts";
+    QString url = Environment::base_url()+"/cards/check-card-attempts/"+ui->textUsername->text();
+    // qDebug()<<url;
+
+    QNetworkRequest request(url);
+    request.setRawHeader("Authorization", myToken);
+    qDebug()<< "Tokeni fetchAttemptsissa: " << myToken;
+
+    QEventLoop loop;
+    postManager = new QNetworkAccessManager(this);
+
+    connect(postManager, &QNetworkAccessManager::finished, &loop, &QEventLoop::quit);
+    connect(postManager, &QNetworkAccessManager::finished, this,  [&attempts](QNetworkReply *reply) {
+        QByteArray response_data = reply->readAll();
+        qDebug()<<"response_data" << response_data;
+
+
+    });
+
+    reply = postManager->get(request);
+    loop.exec();
+
+
+    // lähetä pyyntö serverille joka palauttaa väärien yritysten määrän, aseta muuttujaan attempts
     return attempts;
 }
 
@@ -209,9 +231,9 @@ void login::loginSlot(QNetworkReply *reply)
                 ui->labelInfo->setText("Väärä tunnus/salasana");
                 qDebug()<<"Väärä tunnus/salasana";
                 qDebug()<<"väärien yritysten määrä : " + wrongAttemptsCounter;
-                //wrongAttemptsCounter = fetchAttempts(); // haetaan jo olemassa olevien väärin syötettyjen yritysten määrä (jos käynnistetään uudelleen tai yritetään joskus myöhemmin)
+                wrongAttemptsCounter = fetchAttempts(); // haetaan jo olemassa olevien väärin syötettyjen yritysten määrä (jos käynnistetään uudelleen tai yritetään joskus myöhemmin)
 
-                sendAttemptToServer(wrongAttemptsCounter); // lähetetään väärän yrityksen numero serverille
+                // sendAttemptToServer(wrongAttemptsCounter); // lähetetään väärän yrityksen numero serverille
             }
 
         }
