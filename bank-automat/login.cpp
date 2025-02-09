@@ -2,6 +2,7 @@
 #include "environment.h"
 #include "login.h"
 #include "ui_login.h"
+#include "debitorcredit.h"
 
 login::login(QWidget *parent)
     : QDialog(parent)
@@ -27,10 +28,7 @@ int login::checkCardType()
 {
     int lockstatus=0;
     qDebug()<<"checkCardType";
-
     QString url =  Environment::base_url()+"/procedures/getAccountType/"+ui->textUsername->text();
-
-    qDebug()<<url;
 
 
     // if reply == 'multi' -> kysy tiliä -> joku mysql proseduuri / backend logiikka jolla valitaan oikea tili.
@@ -44,12 +42,14 @@ int login::checkCardStatus()
 
     qDebug()<<"checkCardStatus";
     QString url = Environment::base_url()+"/cards/check-lock-status/"+ui->textUsername->text();
-    qDebug()<<url;
     QNetworkRequest request(url);
     postManager = new QNetworkAccessManager(this);
     connect(postManager,SIGNAL(finished(QNetworkReply*)), this, SLOT(loginSlot(QNetworkReply*)));
     reply = postManager->get(request);
-
+    
+    qDebug()<<"reply";
+    qDebug()<<reply->readAll();
+    
     return cardStatus;
 
 }
@@ -79,6 +79,17 @@ void login::on_btnLogin_clicked()
     reply = postManager->post(request, QJsonDocument(jsonObj).toJson());
 }
 
+
+void delay() // erittäin tyhmä implementaatio kahden ikkunan yhtäaikaa avaamisen estämiseen (multi kortilla)
+{
+    QTime dieTime= QTime::currentTime().addSecs(10); // 10 sekunnin viive tapahtumien välillä, ei jäädytä UI:ta
+    while (QTime::currentTime() < dieTime)
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+}
+
+
+
+
 void login::loginSlot(QNetworkReply *reply)
 {
 
@@ -104,16 +115,30 @@ void login::loginSlot(QNetworkReply *reply)
 
 
 
-                int statusCheck = 0;
-                // ennen kun avataan ikkuna, tarkistetaan kortin tilat ja tyyppi
-                int cardstatus =
-                checkCardStatus();
+                int cardType = 0; // koodattu = 1 arvoksi testausta varten, 1 tulisi requestistä
                 checkCardType();
+                // ennen kun avataan ikkuna, tarkistetaan kortin tilat ja tyyppi
+                int cardLockStatus = checkCardStatus();
 
 
+                if (cardLockStatus == 1) // tarkistetaan kortin lukko ennen kun avataan debit/credit liittymää (jos olisi multi kortti)
+                {
+                    // error viestin käsittely
+                }
 
 
-                objCardInfo->open();
+                if (cardType == 1)
+                {
+                    DebitOrCredit *DOC = new DebitOrCredit(this);
+                    DOC->open();
+                    delay(); // 10 sekunnin viive, eli ei avaa objCardInfo->Open ikkunaa
+                }
+
+                else // jos ei ole käytössä multi kortti ja kortti ei ole lukossa, avataan liittymä
+                {
+                    objCardInfo->open();
+                }
+
             }
             else {
                 ui->labelInfo->setText("Väärä tunnus/salasana");
