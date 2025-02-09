@@ -41,7 +41,7 @@ int login::checkCardType()
     connect(postManager, &QNetworkAccessManager::finished, &loop, &QEventLoop::quit);
     connect(postManager, &QNetworkAccessManager::finished, this,  [&cardType](QNetworkReply *reply) {
         QByteArray response_data = reply->readAll();
-        qDebug()<<"response_data" << response_data;
+        // qDebug()<<"response_data" << response_data;
 
 
         // puretaan vastaus palasiksi: {"account_type":"multi"}
@@ -82,7 +82,7 @@ int login::checkCardStatus()
     connect(postManager, &QNetworkAccessManager::finished, &loop, &QEventLoop::quit);
     connect(postManager, &QNetworkAccessManager::finished, this,  [&cardStatus](QNetworkReply *reply) {
         QByteArray response_data = reply->readAll();
-        qDebug()<<"response_data" << response_data;
+        // qDebug()<<"response_data" << response_data;
 
 
         QJsonDocument json_doc = QJsonDocument::fromJson(response_data); // luodaan QJsonDocument vastauksesta
