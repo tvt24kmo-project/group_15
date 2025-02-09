@@ -45,6 +45,7 @@ void cardInfo::on_btnData_clicked()
     accountData *objAccountData=new accountData(this);
     objAccountData->setUsername(username);
     objAccountData->setMyToken(myToken);
+    objAccountData->fetchData();
     connect(objAccountData, &QDialog::finished, this, &cardInfo::onWindowFinished);
     objAccountData->open();
 
@@ -57,6 +58,7 @@ void cardInfo::on_buttonWithdrawCash_clicked()
     accountData *objAccountData = new accountData(this);
     objAccountData->setUsername(username);
     objAccountData->setMyToken(myToken);
+    objAccountData->fetchData();
     objWithdrawCash->setAccountDataObject(objAccountData); // asetetaan accountData objekti withdrawCash objektiin
     connect(objWithdrawCash, &QDialog::finished, this, &cardInfo::onWindowFinished);
     objWithdrawCash->open();
@@ -79,7 +81,7 @@ void cardInfo::on_btnHistory_clicked()
     accountData *objAccountData=new accountData(this);
     objAccountData->setUsername(username);
     objAccountData->setMyToken(myToken);
-
+    objAccountData->fetchData();
     HistoryWindow *objHistoryWindow = new HistoryWindow(this);
     objHistoryWindow->setAccountDataObject(objAccountData);
     connect(objHistoryWindow, &QDialog::finished, this, &cardInfo::onWindowFinished);

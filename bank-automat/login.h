@@ -6,6 +6,8 @@
 #include <QtNetwork>
 #include <QJsonDocument>
 #include <QTimer>
+#include "accountdata.h"
+#include "cardinfo.h"
 
 namespace Ui {
 class login;
@@ -22,6 +24,9 @@ public:
 private slots:
     void loginSlot(QNetworkReply *reply);
     void on_btnLogin_clicked();
+    void handleDebitChosen(int accountId);
+    void handleCreditChosen(int accountId);
+    
 private:
     Ui::login *ui;
 
@@ -36,6 +41,8 @@ private:
     int wrongAttemptsCounter; // seurataan montako kertaa väärä tunnus/salasana on syötetty
     int fetchAttempts(); // haetaan jo olemassa olevien väärin syötettyjen yritysten määrä (jos käynnistetään uudelleen tai yritetään joskus myöhemmin)
     void sendAttemptToServer(int wrongAttempt); // lähetetään palvelimelle tieto väärästä tunnuksesta/salasanasta
+    accountData *accountDataPtr;
+    cardInfo *objCardInfo;
 };
 
 #endif // LOGIN_H

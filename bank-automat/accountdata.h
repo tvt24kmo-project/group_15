@@ -33,9 +33,10 @@ public:
     
     QString getAccountIban() const;
 
+    void fetchData();
+
 private slots:
     void showDataSlot(QNetworkReply *reply);
-    void fetchData();
 private:
     Ui::accountData *ui;
     QString username;

@@ -7,6 +7,8 @@
 login::login(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::login)
+    , accountDataPtr(new accountData(this))
+    , objCardInfo(nullptr)
 {
     ui->setupUi(this);
 
@@ -21,6 +23,7 @@ login::login(QWidget *parent)
 login::~login()
 {
     delete ui;
+    delete accountDataPtr;
 }
 
 
@@ -184,6 +187,11 @@ void login::sendAttemptToServer(int wrongAttempt)
 void login::onWindowFinished()
 {
     timeoutTimer->start();
+    if (objCardInfo != nullptr)
+    {
+        objCardInfo->deleteLater();
+        objCardInfo = nullptr;
+    }
 }
 
 void login::on_btnLogin_clicked()
@@ -248,23 +256,29 @@ void login::loginSlot(QNetworkReply *reply)
                 
                 int cardType = checkCardType();
 
-                cardInfo *objCardInfo= new cardInfo(this);
-                objCardInfo->setUsername(ui->textUsername->text());
-                objCardInfo->setMyToken(myToken);
-                connect(objCardInfo, &QDialog::finished, this, &login::onWindowFinished);
+
+                accountDataPtr->setUsername(ui->textUsername->text());
+                accountDataPtr->setMyToken(myToken);
 
                 sendAttemptToServer(0); // nollataan väärät yritykset, koska tässä kirjautuminen on onnistunut ja tarkistettu kortin lukitusstatus ylempänä
 
 
                 if (cardType == 1)
                 {
-                    DebitOrCredit *DOC = new DebitOrCredit(this);
+                    DebitOrCredit *DOC = new DebitOrCredit(this, accountDataPtr);
+                    DOC->findChild<QLabel*>("label")->setText(ui->textUsername->text()); //mitvit
+                    connect(DOC, &DebitOrCredit::debitChosen, this, &login::handleDebitChosen);
+                    connect(DOC, &DebitOrCredit::creditChosen, this, &login::handleCreditChosen);
                     DOC->open();
-                    delay(); // 10 sekunnin viive, eli ei avaa objCardInfo->Open ikkunaa heti perään
+                    // delay(); // 10 sekunnin viive, eli ei avaa objCardInfo->Open ikkunaa heti perään
                 }
 
-                else if (cardType == 0 && cardLockStatus == 0)// jos ei ole käytössä multi kortti ja kortti ei ole lukossa, avataan liittymä
+                else if (cardType == 0 && cardLockStatus == 0)
                 {
+                    cardInfo *objCardInfo= new cardInfo(this);
+                    objCardInfo->setUsername(ui->textUsername->text());
+                    objCardInfo->setMyToken(myToken);
+                    connect(objCardInfo, &QDialog::finished, this, &login::onWindowFinished);
                     objCardInfo->open();
                 }
 
@@ -294,4 +308,34 @@ void login::loginSlot(QNetworkReply *reply)
 
     reply->deleteLater();
     postManager->deleteLater();
+}
+
+
+
+
+void login::handleDebitChosen(int accountId) {
+    qDebug() << "handleDebitChosen called, Account ID: " << accountId;
+    accountDataPtr->fetchData(); // IMPORTANT: Fetch data *after* accountId is known
+     //accountDataPtr->setAccountId(accountId); //removed setting id here
+
+    objCardInfo = new cardInfo(this);
+    objCardInfo->setUsername(ui->textUsername->text());  // Set username
+    objCardInfo->setMyToken(accountDataPtr->getMyToken()); // Pass the token
+    connect(objCardInfo, &QDialog::finished, this, &login::onWindowFinished);
+    objCardInfo->open();
+
+}
+
+void login::handleCreditChosen(int accountId) {
+    qDebug() << "handleCreditChosen called, Account ID: " << accountId;
+     // Fetch data for the selected account
+    accountDataPtr->fetchData();  // IMPORTANT: Fetch data *after* accountId is known
+    //accountDataPtr->setAccountId(accountId); //removed setting id here
+
+    objCardInfo = new cardInfo(this);
+    objCardInfo->setUsername(ui->textUsername->text());  // Set username
+    objCardInfo->setMyToken(accountDataPtr->getMyToken()); // Pass the token
+    connect(objCardInfo, &QDialog::finished, this, &login::onWindowFinished);
+     objCardInfo->open();
+
 }
