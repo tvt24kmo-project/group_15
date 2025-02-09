@@ -43,15 +43,11 @@ void DebitOrCredit::fetchAccountIds()
 
         QJsonDocument json_doc = QJsonDocument::fromJson(response_data);
 
-        if (json_doc.isArray()) {
+        if (json_doc.isArray()) {  // ALWAYS expect an array
             QJsonArray jsonArray = json_doc.array();
-            qDebug() << "JsonArray size: " << jsonArray.size();
             if (jsonArray.size() >= 2) {
                 QJsonObject firstAccount = jsonArray[0].toObject();
                 QJsonObject secondAccount = jsonArray[1].toObject();
-
-                qDebug() << "First account credit limit: " << firstAccount["credit_limit"];
-                qDebug() << "Second account credit limit: " << secondAccount["credit_limit"];
 
                 if (firstAccount["credit_limit"].toDouble() > 0) {
                     creditAccountId = firstAccount["idaccount"].toInt();
@@ -60,13 +56,13 @@ void DebitOrCredit::fetchAccountIds()
                     creditAccountId = secondAccount["idaccount"].toInt();
                     debitAccountId = firstAccount["idaccount"].toInt();
                 }
+            } else if (jsonArray.size() == 1) { // Handle single-account case
+                QJsonObject singleAccount = jsonArray[0].toObject();
+                debitAccountId = singleAccount["idaccount"].toInt(); // Assume debit if only one
+                creditAccountId = -1; // No credit account
             }
-            //add else if size = 1 debug messages
-        } else if (json_doc.isObject()) {
-            //add debug messages here
-            QJsonObject json_obj = json_doc.object();
-            debitAccountId = json_obj["idaccount"].toInt();
-        }
+        } // No need for an else if (json_doc.isObject()) anymore
+
         qDebug() << "Debit Account ID (in fetch): " << debitAccountId;
         qDebug() << "Credit Account ID (in fetch): " << creditAccountId;
 

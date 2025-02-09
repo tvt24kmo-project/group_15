@@ -35,6 +35,7 @@ public:
 
     void fetchData();
 
+    void setAccountId(int id);
 private slots:
     void showDataSlot(QNetworkReply *reply);
 private:
@@ -48,6 +49,7 @@ private:
 
     int accountId = 0;
     QTimer *timeoutTimer;
+    QJsonObject findAccountObject(const QJsonArray &jsonArray, int targetAccountId);
 };
 
 #endif // ACCOUNTDATA_H

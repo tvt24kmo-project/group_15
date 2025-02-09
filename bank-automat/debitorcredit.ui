@@ -33,7 +33,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Debit</string>
+         <string>Credit</string>
         </property>
        </widget>
       </item>
@@ -45,7 +45,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Credit</string>
+         <string>Debit</string>
         </property>
        </widget>
       </item>

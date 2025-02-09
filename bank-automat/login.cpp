@@ -3,6 +3,7 @@
 #include "login.h"
 #include "ui_login.h"
 #include "debitorcredit.h"
+#include "accountdata.h"
 
 login::login(QWidget *parent)
     : QDialog(parent)
@@ -165,11 +166,11 @@ void login::sendAttemptToServer(int wrongAttempt)
     connect(postManager, &QNetworkAccessManager::finished, this,  [](QNetworkReply *reply) {
         if (reply->error() == QNetworkReply::NoError)
         {
-            qDebug() << "Väärä yritys lähetetty palvelimelle: " << reply->readAll();
+            //qDebug() << "Väärä yritys lähetetty palvelimelle: " << reply->readAll();
         }
         else
         {
-            qDebug() << "Väärän yrityksen lähetys epäonnistui" << reply->errorString();
+            //qDebug() << "Väärän yrityksen lähetys epäonnistui" << reply->errorString();
         }
         reply->deleteLater();
     });
@@ -275,11 +276,41 @@ void login::loginSlot(QNetworkReply *reply)
 
                 else if (cardType == 0 && cardLockStatus == 0)
                 {
-                    cardInfo *objCardInfo= new cardInfo(this);
-                    objCardInfo->setUsername(ui->textUsername->text());
-                    objCardInfo->setMyToken(myToken);
-                    connect(objCardInfo, &QDialog::finished, this, &login::onWindowFinished);
-                    objCardInfo->open();
+                    QString account_url = Environment::base_url() + "/accounts/" + ui->textUsername->text();
+                    QNetworkRequest account_request(account_url);
+                    account_request.setRawHeader("Authorization", myToken);
+
+                    QNetworkAccessManager *accountManager = new QNetworkAccessManager(this);
+
+                    QEventLoop loop;
+                    connect(accountManager, &QNetworkAccessManager::finished, &loop, &QEventLoop::quit);
+
+                    QNetworkReply *account_reply = accountManager->get(account_request);
+                    loop.exec();
+
+                    QByteArray account_data = account_reply->readAll();
+                    QJsonDocument account_doc = QJsonDocument::fromJson(account_data);
+
+                    if (account_doc.isArray()) {
+                        QJsonArray accountArray = account_doc.array();
+                        if (!accountArray.isEmpty()) {
+                            QJsonObject accountObject = accountArray.first().toObject(); // haetaan yksi ja ainoa tili
+                            
+                            int accountId = accountObject["idaccount"].toInt();
+                            accountDataPtr->setAccountId(accountId); // NYT VASTA asetetaan accountID, koska se on haettu vasta tässä vaiheessa
+        
+                            objCardInfo = new cardInfo(this, accountDataPtr);
+                            objCardInfo->setUsername(ui->textUsername->text());
+                            objCardInfo->setMyToken(myToken);
+                            connect(objCardInfo, &QDialog::finished, this, &login::onWindowFinished);
+                            objCardInfo->open();
+        
+                        } else {
+                            qDebug() << "Account array is empty!"; // ei pitäisi ikinä tapahtua
+                        }
+                    }
+                    account_reply->deleteLater();
+                    accountManager->deleteLater();
                 }
 
             }
@@ -295,9 +326,9 @@ void login::loginSlot(QNetworkReply *reply)
                 }
                 else // jos kortti ei ole lukittu, kasvatetaan yritysten määrää
                 {
-                    qDebug() << "väärien yritysten määrä (palautuksen jälkeen):" << wrongAttemptsCounter;
+                    //qDebug() << "väärien yritysten määrä (palautuksen jälkeen):" << wrongAttemptsCounter;
                     wrongAttemptsCounter++; // kasvatetaan väärien yritysten määrää
-                    qDebug() << "väärien yritysten määrä (palautuksen ja +1 jälkeen):" << wrongAttemptsCounter;
+                    //qDebug() << "väärien yritysten määrä (palautuksen ja +1 jälkeen):" << wrongAttemptsCounter;
                     sendAttemptToServer(wrongAttemptsCounter); // lähetetään väärän yrityksen numero serverille
                 }
             }
@@ -315,27 +346,34 @@ void login::loginSlot(QNetworkReply *reply)
 
 void login::handleDebitChosen(int accountId) {
     qDebug() << "handleDebitChosen called, Account ID: " << accountId;
-    accountDataPtr->fetchData(); // IMPORTANT: Fetch data *after* accountId is known
-     //accountDataPtr->setAccountId(accountId); //removed setting id here
 
-    objCardInfo = new cardInfo(this);
-    objCardInfo->setUsername(ui->textUsername->text());  // Set username
-    objCardInfo->setMyToken(accountDataPtr->getMyToken()); // Pass the token
+    accountDataPtr->setUsername(ui->textUsername->text());
+    accountDataPtr->setMyToken(myToken);
+    accountDataPtr->setAccountId(accountId);
+
+    accountDataPtr->fetchData();
+
+    // Pass accountDataPtr to cardInfo
+    objCardInfo = new cardInfo(this, accountDataPtr);
+    objCardInfo->setUsername(ui->textUsername->text());
+    objCardInfo->setMyToken(accountDataPtr->getMyToken());
     connect(objCardInfo, &QDialog::finished, this, &login::onWindowFinished);
     objCardInfo->open();
-
 }
 
 void login::handleCreditChosen(int accountId) {
     qDebug() << "handleCreditChosen called, Account ID: " << accountId;
-     // Fetch data for the selected account
-    accountDataPtr->fetchData();  // IMPORTANT: Fetch data *after* accountId is known
-    //accountDataPtr->setAccountId(accountId); //removed setting id here
 
-    objCardInfo = new cardInfo(this);
-    objCardInfo->setUsername(ui->textUsername->text());  // Set username
-    objCardInfo->setMyToken(accountDataPtr->getMyToken()); // Pass the token
+    accountDataPtr->setUsername(ui->textUsername->text());
+    accountDataPtr->setMyToken(myToken);
+    accountDataPtr->setAccountId(accountId);
+
+    accountDataPtr->fetchData();
+
+    // Pass accountDataPtr to cardInfo
+    objCardInfo = new cardInfo(this, accountDataPtr);
+    objCardInfo->setUsername(ui->textUsername->text());
+    objCardInfo->setMyToken(accountDataPtr->getMyToken());
     connect(objCardInfo, &QDialog::finished, this, &login::onWindowFinished);
-     objCardInfo->open();
-
+    objCardInfo->open();
 }
