@@ -253,6 +253,8 @@ void login::loginSlot(QNetworkReply *reply)
                 objCardInfo->setMyToken(myToken);
                 connect(objCardInfo, &QDialog::finished, this, &login::onWindowFinished);
 
+                sendAttemptToServer(0); // nollataan väärät yritykset, koska tässä kirjautuminen on onnistunut ja tarkistettu kortin lukitusstatus ylempänä
+
 
                 if (cardType == 1)
                 {
@@ -277,7 +279,7 @@ void login::loginSlot(QNetworkReply *reply)
                 {
                     ui->labelInfo->setText("Kortti lukittu");
                 }
-                else
+                else // jos kortti ei ole lukittu, kasvatetaan yritysten määrää
                 {
                     qDebug() << "väärien yritysten määrä (palautuksen jälkeen):" << wrongAttemptsCounter;
                     wrongAttemptsCounter++; // kasvatetaan väärien yritysten määrää
