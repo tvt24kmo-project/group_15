@@ -32,6 +32,30 @@ router.post('/withdraw', function (req, res) {
 });
 
 
+router.post('/transfer', function (req, res) {
+    const { sender_account, receiver_account, transfer_amount } = req.body;
+
+    // Validate input
+    if (!sender_account || !receiver_account || !transfer_amount || transfer_amount <= 0) {
+        return res.status(400).json({ error: 'Invalid input: sender_account, receiver_account, and a positive transfer_amount are required.' });
+    }
+
+    // Call the ExecuteTransfer procedure
+    procedures.executeTransfer(sender_account, receiver_account, transfer_amount, function (err, result) {
+        if (err) {
+            console.error(err); // Log error for debugging
+            return res.status(500).json({ error: 'An error occurred while processing the transfer.' });
+        }
+
+        // Handle the result and return appropriate response
+        // (Assuming your procedures return a message or success/failure indicator)
+        if (result && result.message) {
+            res.json({ message: result.message });  // Send success message back to the frontend
+        } else {
+            res.status(500).json({ error: 'Transfer failed due to an unexpected issue.' });
+        }
+    });
+});
 
 
 router.post('/getAccountType', function (req, res) {

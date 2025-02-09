@@ -17,6 +17,18 @@ const procedures = {
         );
     },
 
+    const executeTransfer = (sender_account, receiver_account, transfer_amount, callback) => {
+        db.query(
+            "CALL ExecuteTransfer(?, ?, ?);", 
+            [sender_account, receiver_account, transfer_amount], 
+            function (err, results) {
+                if (err) {
+                    return callback(err, null);
+                }
+                callback(null, { message: 'Siirto onnistui' });
+            }
+        );
+    };
 
     getAccountType: function (idaccount, callback) {
         db.query(

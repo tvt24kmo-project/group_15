@@ -40,8 +40,30 @@ void Transfer::on_btnCompleteTransfer_clicked() {
         qDebug()<<"Siirretään " + QString::number(transferAmount) + "€ tilille" ; // Tieto konsoliin seurantaa varten
         ui->lineTransferAmount->setText("0"); // Nollataan labeli
         ui->labelTransferInfo->clear(); // Tyhjennetään mahdolliset aiemmat virheilmoitukset
-
-        qDebug() << "Siirretään " + QString::number(transferAmount) + "€ tilille " + receiverAccount;
         ui->labelTransferInfo->setText("Siirto suoritettu onnistuneesti!");
     }
+}
+
+void Transfer::sendTransferRequest(const QString &senderAccount, const QString &receiverAccount, double transferAmount) {
+    QJsonObject transferData;
+    transferData["sender_account"] = senderAccount; // Lähettäjän tili
+    transferData["receiver_account"] = receiverAccount;
+    transferData["transfer_amount"] = transferAmount;
+
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    QNetworkRequest request(QUrl("http://localhost:3000/transfer"));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+    QJsonDocument doc(transferData);
+    QByteArray data = doc.toJson();
+    QNetworkReply *reply = manager->post(request, data);
+
+    connect(reply, &QNetworkReply::finished, this, [=]() {
+        if (reply->error() == QNetworkReply::NoError) {
+            ui->labelTransferInfo->setText("Siirto suoritettu onnistuneesti!");
+        } else {
+            ui->labelTransferInfo->setText("Siirto epäonnistui: " + reply->errorString());
+        }
+        reply->deleteLater(); // Vapautetaan vastaus
+    });
 }
