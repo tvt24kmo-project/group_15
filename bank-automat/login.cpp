@@ -22,6 +22,41 @@ login::~login()
     delete ui;
 }
 
+
+int login::checkCardType()
+{
+    int lockstatus=0;
+    qDebug()<<"checkCardType";
+
+    QString url =  Environment::base_url()+"/procedures/getAccountType/"+ui->textUsername->text();
+
+    qDebug()<<url;
+
+
+    // if reply == 'multi' -> kysy tiliä -> joku mysql proseduuri / backend logiikka jolla valitaan oikea tili.
+
+    return lockstatus;
+}
+
+int login::checkCardStatus()
+{
+    int cardStatus = 0;
+
+    qDebug()<<"checkCardStatus";
+    QString url = Environment::base_url()+"/cards/check-lock-status/"+ui->textUsername->text();
+    qDebug()<<url;
+    QNetworkRequest request(url);
+    postManager = new QNetworkAccessManager(this);
+    connect(postManager,SIGNAL(finished(QNetworkReply*)), this, SLOT(loginSlot(QNetworkReply*)));
+    reply = postManager->get(request);
+
+    return cardStatus;
+
+}
+
+
+
+
 void login::onWindowFinished()
 {
     timeoutTimer->start();
@@ -66,6 +101,18 @@ void login::loginSlot(QNetworkReply *reply)
                 objCardInfo->setUsername(ui->textUsername->text());
                 objCardInfo->setMyToken(myToken);
                 connect(objCardInfo, &QDialog::finished, this, &login::onWindowFinished);
+
+
+
+                int statusCheck = 0;
+                // ennen kun avataan ikkuna, tarkistetaan kortin tilat ja tyyppi
+                int cardstatus =
+                checkCardStatus();
+                checkCardType();
+
+
+
+
                 objCardInfo->open();
             }
             else {

@@ -29,6 +29,8 @@ private:
     QNetworkReply *reply;
     QByteArray response_data;
     QTimer *timeoutTimer;
+    int checkCardType(); // 0 = normi, 1 = multi
+    int checkCardStatus(); // 0 = ei lukittu, 1 = lukittu
 };
 
 #endif // LOGIN_H
