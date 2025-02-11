@@ -1,7 +1,7 @@
 #include "accountdata.h"
 #include "ui_accountdata.h"
 #include "environment.h"
-
+#include <QJsonArray>
 
 accountData::accountData(QWidget *parent) : QDialog(parent), ui(new Ui::accountData)
 {
@@ -28,7 +28,6 @@ void accountData::setUsername(const QString &newUsername)
 void accountData::setMyToken(const QByteArray &newMyToken)
 {
     myToken = newMyToken;
-    fetchData();
 }
 
 void accountData::fetchData()
@@ -50,32 +49,43 @@ QString accountData::getUsername() const
     return username;
 }
 
+QJsonObject accountData::findAccountObject(const QJsonArray &jsonArray, int targetAccountId) {
+    for (const QJsonValue &value : jsonArray) {
+        QJsonObject obj = value.toObject();
+        if (obj["idaccount"].toInt() == targetAccountId) {
+            return obj;
+        }
+    }
+    return QJsonObject();
+}
+
 void accountData::showDataSlot(QNetworkReply *reply)
 {
-      qDebug()<<"show data SLOT";
+    qDebug()<<"show data SLOT";
     response_data=reply->readAll();
     qDebug()<<response_data;
     QJsonDocument json_doc = QJsonDocument::fromJson(response_data);
-    QJsonObject jsonObj = json_doc.object();
 
-    //accounts: idaccount,customer_id,balance,accountiban,credit_limit
+    if (json_doc.isArray()) {
+        QJsonArray jsonArray = json_doc.array();
+        QJsonObject jsonObj = findAccountObject(jsonArray, accountId);
 
-    accountId = jsonObj["idaccount"].toInt();
-    ui->labelIdaccount->setText(QString::number(accountId));
-
-    ui->labelCustomer_id->setText(QString::number(jsonObj["customer_id"].toInt()));
-    ui->labelBalance->setText(jsonObj["balance"].toString());
-    ui->labelAccountiban->setText(jsonObj["accountiban"].toString());
-    ui->labelCredit_limit->setText(jsonObj["credit_limit"].toString());
-
-
-
-
-
-
+        if (!jsonObj.isEmpty())
+        {
+            // accountId = jsonObj["idaccount"].toInt();
+            ui->labelIdaccount->setText(QString::number(accountId));
+            ui->labelCustomer_id->setText(QString::number(jsonObj["customer_id"].toInt()));
+            ui->labelBalance->setText(jsonObj["balance"].toString());
+            ui->labelAccountiban->setText(jsonObj["accountiban"].toString());
+            ui->labelCredit_limit->setText(jsonObj["credit_limit"].toString());
+        } else {
+            qDebug() << "Account not found in JSON array";
+        }
+    } else {
+        qDebug() << "response_data is not json array";
+    }
     reply->deleteLater();
     dataManager->deleteLater();
-
 }
 
 
@@ -87,6 +97,11 @@ int accountData::getAccountId()
 QByteArray accountData::getMyToken()
 {
     return myToken;
+}
+
+void accountData::setAccountId(int id)
+{
+    accountId = id;
 }
 
 QString accountData::getAccountIban() const
