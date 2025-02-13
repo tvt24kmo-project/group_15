@@ -75,8 +75,8 @@ void accountData::showDataSlot(QNetworkReply *reply)
         if (!jsonObj.isEmpty())
         {
             // accountId = jsonObj["idaccount"].toInt();
-           // ui->labelIdaccount->setText(QString::number(accountId));
-           // ui->labelCustomer_id->setText(QString::number(jsonObj["customer_id"].toInt()));
+            ui->labelIdaccount->setText(QString::number(accountId));
+            ui->labelCustomer_id->setText(QString::number(jsonObj["customer_id"].toInt()));
             ui->labelBalance->setText(jsonObj["balance"].toString());
             ui->labelAccountiban->setText(jsonObj["accountiban"].toString());
             ui->labelCredit_limit->setText(jsonObj["credit_limit"].toString());

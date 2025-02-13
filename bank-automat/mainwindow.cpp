@@ -2,7 +2,7 @@
 #include "login.h"
 #include "ui_mainwindow.h"
 #include "environment.h"
-#include <Login.h>
+#include <login.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // haetaan kuva backendistä
     QString filename = "mainwindow.png"; // joustava tapa hakea kuvia backendistä
-    QString url = Environment::linux_url() + "/images/" + filename; // kuvan sijainti ja nimi muuttujasta
+    QString url = Environment::base_url() + "/images/" + filename; // kuvan sijainti ja nimi muuttujasta
     imageFetcher->fetchImage(QUrl(url));
 } // kutsutaan fetchImage funktiota ja annetaan url parametrina
 

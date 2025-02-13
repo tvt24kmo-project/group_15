@@ -4,7 +4,6 @@
 #include "withdrawcash.h"
 #include "transfer.h"
 #include "historywindow.h"
-#include "login.h"
 
 cardInfo::cardInfo(QWidget *parent, accountData *data) : 
     QDialog(parent)
