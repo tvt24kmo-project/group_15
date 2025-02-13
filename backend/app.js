@@ -87,16 +87,20 @@ const DB_USER = process.env.DB_USER;
 const DB_PASSWORD = process.env.DB_PASSWORD;
 const DB_NAME = process.env.DB_NAME;
 const backupFile = path.join(BACKUP_DIR, "backup.sql");
-const backupCommand = 'mysqldump -u ${DB_USER} -p${DB_PASSWORD} ${DB_NAME} > "${backupFile}"';
+const backupCommand = 'mysqldump -u '+DB_USER +' -p'+DB_PASSWORD+' '+DB_NAME +' > ' +backupFile;
 
 function backupDatabase() {  
   console.log(backupCommand);
   exec(backupCommand, (error, stdout, stderr) => {
-    if (stderr) {
-      console.error(stderr);
+    if (error) {
+      console.error(error.message);
       return;
     }
-    console.log("Backup database done");
+    //if (stderr) {
+    //  console.error(stderr);
+    //  return;
+    //}
+  console.log("Backup database done");
   });
 }
 cron.schedule("0 3 * * *", backupDatabase); // backupataan joka päivä klo 03:00. ("* * * * * *"), on joka sekunti
