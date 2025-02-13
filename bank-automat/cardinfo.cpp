@@ -4,6 +4,7 @@
 #include "withdrawcash.h"
 #include "transfer.h"
 #include "historywindow.h"
+#include "login.h"
 
 cardInfo::cardInfo(QWidget *parent, accountData *data) : 
     QDialog(parent)
@@ -52,6 +53,8 @@ void cardInfo::on_btnData_clicked()
     */
     accountDataPtr->fetchData();
     connect(accountDataPtr, &QDialog::finished, this, &cardInfo::onWindowFinished);
+    QRect geometry = this->geometry();  // Tallenna sijainti ja koko
+    accountDataPtr->setGeometry(geometry);
     accountDataPtr->open();
 
 }
@@ -70,6 +73,8 @@ void cardInfo::on_buttonWithdrawCash_clicked()
 
     objWithdrawCash->setAccountDataObject(accountDataPtr); // asetetaan accountData objekti withdrawCash objektiin
     connect(objWithdrawCash, &QDialog::finished, this, &cardInfo::onWindowFinished);
+    QRect geometry = this->geometry();  // Tallenna sijainti ja koko
+    objWithdrawCash->setGeometry(geometry);
     objWithdrawCash->open();
 }
 
@@ -80,6 +85,8 @@ void cardInfo::on_btnTransfer_clicked()
     // Tilisiirrot-nappia painettu
     Transfer *objTransfer = new Transfer(this);
     connect(objTransfer, &QDialog::finished, this, &cardInfo::onWindowFinished);
+    QRect geometry = this->geometry();  // Tallenna sijainti ja koko
+    objTransfer->setGeometry(geometry);
     objTransfer->open();
 }
 
@@ -97,6 +104,14 @@ void cardInfo::on_btnHistory_clicked()
     HistoryWindow *objHistoryWindow = new HistoryWindow(this);
     objHistoryWindow->setAccountDataObject(accountDataPtr); // asetetaan accountData objekti historyWindow objektiin
     connect(objHistoryWindow, &QDialog::finished, this, &cardInfo::onWindowFinished);
+    QRect geometry = this->geometry();  // Tallenna sijainti ja koko
+    objHistoryWindow->setGeometry(geometry);
     objHistoryWindow->open();
+}
+
+
+void cardInfo::on_btnClose_clicked()
+{
+    cardInfo::close();
 }
 

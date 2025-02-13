@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // haetaan kuva backendistä
     QString filename = "mainwindow.png"; // joustava tapa hakea kuvia backendistä
-    QString url = Environment::base_url() + "/images/" + filename; // kuvan sijainti ja nimi muuttujasta
+    QString url = Environment::linux_url() + "/images/" + filename; // kuvan sijainti ja nimi muuttujasta
     imageFetcher->fetchImage(QUrl(url));
 } // kutsutaan fetchImage funktiota ja annetaan url parametrina
 
@@ -44,5 +44,8 @@ void MainWindow::on_btnStart_clicked()
 {
     //Aloita-painiketta painettu
     login *objLogin=new login(this);
+    QRect geometry = this->geometry();  // Tallenna sijainti ja koko
+    objLogin->setGeometry(geometry);
+
     objLogin->open();
 }

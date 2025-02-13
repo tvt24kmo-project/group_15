@@ -32,6 +32,8 @@ private slots:
 
     void on_btnHistory_clicked();
 
+    void on_btnClose_clicked();
+
 private:
     Ui::cardInfo *ui;
     QString username;

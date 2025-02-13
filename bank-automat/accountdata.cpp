@@ -61,6 +61,8 @@ QJsonObject accountData::findAccountObject(const QJsonArray &jsonArray, int targ
 
 void accountData::showDataSlot(QNetworkReply *reply)
 {
+    timeoutTimer->start();// Käynnistetään ajastin uudelleen
+
     qDebug()<<"show data SLOT";
     response_data=reply->readAll();
     qDebug()<<response_data;
@@ -73,8 +75,8 @@ void accountData::showDataSlot(QNetworkReply *reply)
         if (!jsonObj.isEmpty())
         {
             // accountId = jsonObj["idaccount"].toInt();
-            ui->labelIdaccount->setText(QString::number(accountId));
-            ui->labelCustomer_id->setText(QString::number(jsonObj["customer_id"].toInt()));
+           // ui->labelIdaccount->setText(QString::number(accountId));
+           // ui->labelCustomer_id->setText(QString::number(jsonObj["customer_id"].toInt()));
             ui->labelBalance->setText(jsonObj["balance"].toString());
             ui->labelAccountiban->setText(jsonObj["accountiban"].toString());
             ui->labelCredit_limit->setText(jsonObj["credit_limit"].toString());
@@ -108,3 +110,9 @@ QString accountData::getAccountIban() const
 {
     return ui->labelAccountiban->text();
 }
+
+void accountData::on_btnClose_clicked()
+{
+    accountData::close();
+}
+

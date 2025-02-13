@@ -19,6 +19,8 @@ public:
 private slots:
     void on_btnCompleteTransfer_clicked();
 
+    void on_btnClose_clicked();
+
 private:
     Ui::Transfer *ui;
     QTimer *timeoutTimer;

@@ -45,3 +45,9 @@ void Transfer::on_btnCompleteTransfer_clicked() {
         ui->labelTransferInfo->setText("Siirto suoritettu onnistuneesti!");
     }
 }
+
+void Transfer::on_btnClose_clicked()
+{
+    Transfer::close();
+}
+
