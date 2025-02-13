@@ -61,6 +61,8 @@ QJsonObject accountData::findAccountObject(const QJsonArray &jsonArray, int targ
 
 void accountData::showDataSlot(QNetworkReply *reply)
 {
+    timeoutTimer->start();// Käynnistetään ajastin uudelleen
+
     qDebug()<<"show data SLOT";
     response_data=reply->readAll();
     qDebug()<<response_data;
@@ -108,3 +110,9 @@ QString accountData::getAccountIban() const
 {
     return ui->labelAccountiban->text();
 }
+
+void accountData::on_btnClose_clicked()
+{
+    accountData::close();
+}
+

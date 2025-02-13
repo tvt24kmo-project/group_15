@@ -303,6 +303,8 @@ void login::loginSlot(QNetworkReply *reply)
                             objCardInfo->setUsername(ui->textUsername->text());
                             objCardInfo->setMyToken(myToken);
                             connect(objCardInfo, &QDialog::finished, this, &login::onWindowFinished);
+                            QRect geometry = this->geometry();  // Tallenna sijainti ja koko
+                            objCardInfo->setGeometry(geometry);
                             objCardInfo->open();
         
                         } else {
@@ -377,3 +379,11 @@ void login::handleCreditChosen(int accountId) {
     connect(objCardInfo, &QDialog::finished, this, &login::onWindowFinished);
     objCardInfo->open();
 }
+
+void login::on_btnCancel_clicked()
+{
+    this->close();
+}
+
+
+

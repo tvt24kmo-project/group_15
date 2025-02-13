@@ -203,3 +203,9 @@ void WithdrawCash::handleWithdrawResponse(QNetworkReply *reply)
     reply->deleteLater();
     manager->deleteLater();
 }
+
+void WithdrawCash::on_btnClose_clicked()
+{
+    WithdrawCash::close();
+}
+

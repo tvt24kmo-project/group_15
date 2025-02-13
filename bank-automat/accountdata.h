@@ -38,6 +38,8 @@ public:
     void setAccountId(int id);
 private slots:
     void showDataSlot(QNetworkReply *reply);
+    void on_btnClose_clicked();
+
 private:
     Ui::accountData *ui;
     QString username;

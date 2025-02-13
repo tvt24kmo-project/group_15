@@ -27,6 +27,8 @@ private slots:
     void handleDebitChosen(int accountId);
     void handleCreditChosen(int accountId);
     
+    void on_btnCancel_clicked();
+
 private:
     Ui::login *ui;
 

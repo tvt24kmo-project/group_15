@@ -2,7 +2,7 @@
 #include "login.h"
 #include "ui_mainwindow.h"
 #include "environment.h"
-#include <Login.h>
+#include <login.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -44,5 +44,8 @@ void MainWindow::on_btnStart_clicked()
 {
     //Aloita-painiketta painettu
     login *objLogin=new login(this);
+    QRect geometry = this->geometry();  // Tallenna sijainti ja koko
+    objLogin->setGeometry(geometry);
+
     objLogin->open();
 }
