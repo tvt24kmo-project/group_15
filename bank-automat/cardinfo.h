@@ -21,6 +21,7 @@ public:
     void setUsername(const QString &newUsername);
 
     void setMyToken(const QByteArray &newMyToken);
+    void setCustomerID(const int &newCustomerID);
 
     void onWindowFinished();
 
@@ -37,7 +38,7 @@ private slots:
 
     void onImageFetched(const QPixmap &pixmap); // slot onImageFetched joka ottaa QPixmapin parametrina ja asettaa sen labeliin
     void onFetchFailed(const QString &error); // slot onFetchFailed joka ottaa QStringin parametrina ja asettaa sen labeliin
-
+    void onFullNameFetched(QNetworkReply *reply);
 
 
 private:
@@ -47,6 +48,8 @@ private:
     QTimer *timeoutTimer;
     accountData *accountDataPtr;
     ImageFetcher *imageFetcher;
+    int customerID;
+    void fetchFullName(int customerId);
 };
 
 #endif // CARDINFO_H

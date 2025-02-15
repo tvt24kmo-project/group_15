@@ -243,20 +243,20 @@ void login::loginSlot(QNetworkReply *reply)
 
                 // tokeni talteen luokan sisälle
                 myToken="Bearer "+response_data; // ei luoda erillistä QByteArrayta vaan käytetään privatessa olevaa
-                // qDebug()<<"token tallennettu private muuttujaan: " << myToken;
+                qDebug()<<"login::loginSlot: token tallennettu private muuttujaan: " << myToken;
 
 
                 int cardLockStatus = checkCardStatus();
-                // qDebug() << "Kortin lukitus status: " << cardLockStatus;
+                qDebug() << "login::loginSlot: Kortin lukitus status: " << cardLockStatus;
                 if (cardLockStatus == 1)
                 {
                     // tee joku järkevämpi pop up ikkuna tms, tämä ajaa asiansa testauksessa
                     ui->labelInfo->setText("Kortti on lukittu");
                     return;
                 }
-                
-                int cardType = checkCardType();
 
+                int cardType = checkCardType();
+                qDebug() << "login::loginSlot: Kortin tyyppi: " << cardType;
 
                 accountDataPtr->setUsername(ui->textUsername->text());
                 accountDataPtr->setMyToken(myToken);
@@ -295,18 +295,48 @@ void login::loginSlot(QNetworkReply *reply)
                         QJsonArray accountArray = account_doc.array();
                         if (!accountArray.isEmpty()) {
                             QJsonObject accountObject = accountArray.first().toObject(); // haetaan yksi ja ainoa tili
-                            
+
                             int accountId = accountObject["idaccount"].toInt();
                             accountDataPtr->setAccountId(accountId); // NYT VASTA asetetaan accountID, koska se on haettu vasta tässä vaiheessa
-        
+
+                            // ** GET CUSTOMER ID **
+                            QString customer_url = Environment::base_url() + "/cards/customer/" + ui->textUsername->text();
+                            qDebug() << "login::loginSlot: Customer ID URL: " << customer_url;
+                            QNetworkRequest customer_request(customer_url);
+                            customer_request.setRawHeader("Authorization", myToken);
+                            QNetworkAccessManager *customerManager = new QNetworkAccessManager(this);
+
+                            QEventLoop customerLoop;
+                            connect(customerManager, &QNetworkAccessManager::finished, &customerLoop, &QEventLoop::quit);
+                            QNetworkReply* customer_reply = customerManager->get(customer_request);
+                            customerLoop.exec();
+
+                            QByteArray customer_data = customer_reply->readAll();
+                            qDebug() << "login::loginSlot: Customer data: " << customer_data;
+                            QJsonDocument customer_doc = QJsonDocument::fromJson(customer_data);
+                            qDebug() << "login::loginSlot: Customer doc: " << customer_doc;
+                            int customerID = -1; // Initialize with an invalid value
+                            if (customer_doc.isArray()) {
+                                QJsonArray customerArray = customer_doc.array();
+                                if (!customerArray.isEmpty()) {
+                                    QJsonObject customerObject = customerArray.first().toObject();
+                                    customerID = customerObject["idcustomer"].toInt();
+                                    qDebug() << "login::loginSlot: Customer ID: " << customerID;
+                                }
+                            }
+                            customer_reply->deleteLater();
+                            customerManager->deleteLater();
+
+                            // ** NOW we can create cardInfo and set all necessary data **
                             objCardInfo = new cardInfo(this, accountDataPtr);
                             objCardInfo->setUsername(ui->textUsername->text());
                             objCardInfo->setMyToken(myToken);
+                            objCardInfo->setCustomerID(customerID); // ** SET CUSTOMER ID **
                             connect(objCardInfo, &QDialog::finished, this, &login::onWindowFinished);
                             QRect geometry = this->geometry();  // Tallenna sijainti ja koko
                             objCardInfo->setGeometry(geometry);
                             objCardInfo->open();
-        
+
                         } else {
                             qDebug() << "Account array is empty!"; // ei pitäisi ikinä tapahtua
                         }

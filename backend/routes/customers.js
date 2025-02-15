@@ -50,4 +50,16 @@ router.delete('/:id', function (req, res) {
   });
 });
 
+
+
+router.get('/fullname/:id', function (req, res) {
+  customers.getFullName(req.params.id, function (err, result) {
+      if (err) {
+          res.json(err);
+      } else {
+          res.json(result);
+      }
+  });
+});
+
 module.exports = router;

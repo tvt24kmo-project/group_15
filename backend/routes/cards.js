@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const cards = require('../models/cards_model');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 //näytä kaikki tiedot kortista
 router.get('/', function (req, res) {
@@ -87,5 +91,16 @@ router.get("/check-card-attempts/:cardnumber", function (req, res) {
     });
 });
 
+// haetaan customerid cardidn perusteella
+router.get('/customer/:cardnumber', function(req, res) {
+    cards.getCustomerByCardNumber(req.params.cardnumber, function(err, result) {
+        if (err) {
+            console.error("Error fetching customer ID:", err);
+            res.status(500).json({ error: 'Database error' }); // Send a proper error response
+        } else {
+            res.json(result);
+        }
+    });
+});
 
 module.exports = router;    
