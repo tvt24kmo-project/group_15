@@ -47,7 +47,12 @@ void WithdrawCash::on_buttonOther_clicked()
     {
         // jos jaollinen minimi setelillä (20) tai 50 setelillä (pakosta tosi aina 50€+ summilla, joten OR min ja 50 välillä ei aiheuta ongelmia)
         // ja myös jos jaollinen 20+50 luvuilla, kuten 70, 120, 170 jne.
-        if (cashAmount >= MINBILLSIZE && (cashAmount % MINBILLSIZE == 0 || cashAmount % 50 == 0 || cashAmount % 50 % MINBILLSIZE == 0))
+        if (cashAmount > maxWithdrawSize)
+        {
+            QErrorMessage *errorMessage = new QErrorMessage(this); // luodaan uusi errormessageluokka
+            errorMessage->showMessage("Rahamäärä " + QString::number(cashAmount) + " on liian suuri!"); // näytetään pop up virhe
+        }
+        else if (cashAmount >= MINBILLSIZE && (cashAmount % MINBILLSIZE == 0 || cashAmount % 50 == 0 || cashAmount % 50 % MINBILLSIZE == 0))
         {
             qDebug()<<"Jaollinen " + QString::number(MINBILLSIZE) + ":llä(pienin seteli), tai 50€"; // qstring moment
             ui->labelAmount->setText(QString::number(cashAmount)); // muunnetaan rahamäärä qstringiksi ja labeliin
@@ -117,6 +122,13 @@ void WithdrawCash::on_withdrawCash_clicked()
     {
         QErrorMessage *errorMessage = new QErrorMessage(this);
         errorMessage->showMessage("Syötä noston määrä ensin");
+    }
+
+    // hirveää soppakoodia mutta tällä estetään *taas* liian ison määrän nosto
+    else if(cashAmount > maxWithdrawSize)
+    {
+        QErrorMessage *errorMessage = new QErrorMessage(this); // luodaan uusi errormessageluokka
+        errorMessage->showMessage("Rahamäärä " + QString::number(cashAmount) + " on liian suuri!"); // näytetään pop up virhe
     }
 
     // VIELÄ KERRAN tarkistetaan että määrä on varmasti rajojen sisällä,

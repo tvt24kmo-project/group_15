@@ -41,6 +41,7 @@ private slots:
 private:
     int MINBILLSIZE = 20; // pienin seteli mitä automaatti antaa muun määrän nostoon (esim 2x20€ = ok, 1x5 tai 3x5 = ei ok)
     int cashAmount = 0; // muuttuja jossa arvo muuttuu näppäinten/muun määrän perusteella
+    int maxWithdrawSize = 1000; // maksimi nostettava raha kerrallaan
     Ui::WithdrawCash *ui;
     QNetworkAccessManager *manager;
     QString withdrawUrl = Environment::base_url() + "/procedures/withdraw";
