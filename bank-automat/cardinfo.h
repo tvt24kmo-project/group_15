@@ -5,6 +5,7 @@
 #include "qdialog.h"
 #include <QTimer>
 #include "accountdata.h"
+#include "imagefetcher.h"
 
 namespace Ui {
 class cardInfo;
@@ -34,12 +35,18 @@ private slots:
 
     void on_btnClose_clicked();
 
+    void onImageFetched(const QPixmap &pixmap); // slot onImageFetched joka ottaa QPixmapin parametrina ja asettaa sen labeliin
+    void onFetchFailed(const QString &error); // slot onFetchFailed joka ottaa QStringin parametrina ja asettaa sen labeliin
+
+
+
 private:
     Ui::cardInfo *ui;
     QString username;
     QByteArray myToken;
     QTimer *timeoutTimer;
     accountData *accountDataPtr;
+    ImageFetcher *imageFetcher;
 };
 
 #endif // CARDINFO_H

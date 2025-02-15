@@ -45,7 +45,11 @@ const accounts = {
     // Poista tili id:n perusteella
     deleteAccount: function (id, callback) {
         return db.query("DELETE FROM accounts WHERE idaccount=?", [id], callback);
-    }
+    },
+    getFullName: function (id, callback) {
+        return db.query("SELECT fname, lname FROM customers WHERE idcustomer=?", [id], callback);
+    },
+    
 };
 
 module.exports = accounts;

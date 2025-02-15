@@ -109,7 +109,7 @@ int login::checkCardStatus()
 int login::fetchAttempts()
 {
     int attempts = 0;
-    qDebug()<<"\n\nfetchAttempts";
+    // qDebug()<<"\n\nfetchAttempts";
     QString url = Environment::base_url()+"/cards/check-card-attempts/"+ui->textUsername->text();
     // qDebug()<<url;
 
@@ -146,7 +146,7 @@ int login::fetchAttempts()
 
 void login::sendAttemptToServer(int wrongAttempt)
 {
-    qDebug()<<"sendAttemptToServer";
+    // qDebug()<<"sendAttemptToServer";
     QString url = Environment::base_url()+"/cards/update-card-attempts/"+ui->textUsername->text();
     //qDebug()<<url;
     //qDebug()<<"Väärät yritykset (sendAttemptToServer): " << wrongAttempt;
@@ -247,7 +247,7 @@ void login::loginSlot(QNetworkReply *reply)
 
 
                 int cardLockStatus = checkCardStatus();
-                qDebug() << "Kortin lukitus status: " << cardLockStatus;
+                // qDebug() << "Kortin lukitus status: " << cardLockStatus;
                 if (cardLockStatus == 1)
                 {
                     // tee joku järkevämpi pop up ikkuna tms, tämä ajaa asiansa testauksessa
@@ -347,7 +347,7 @@ void login::loginSlot(QNetworkReply *reply)
 
 
 void login::handleDebitChosen(int accountId) {
-    qDebug() << "handleDebitChosen called, Account ID: " << accountId;
+    // qDebug() << "handleDebitChosen called, Account ID: " << accountId;
 
     accountDataPtr->setUsername(ui->textUsername->text());
     accountDataPtr->setMyToken(myToken);
@@ -364,7 +364,7 @@ void login::handleDebitChosen(int accountId) {
 }
 
 void login::handleCreditChosen(int accountId) {
-    qDebug() << "handleCreditChosen called, Account ID: " << accountId;
+    // qDebug() << "handleCreditChosen called, Account ID: " << accountId;
 
     accountDataPtr->setUsername(ui->textUsername->text());
     accountDataPtr->setMyToken(myToken);

@@ -9,8 +9,13 @@ cardInfo::cardInfo(QWidget *parent, accountData *data) :
     QDialog(parent)
     , ui(new Ui::cardInfo)
     , accountDataPtr(data)
+    , imageFetcher(new ImageFetcher(this))
 {
     ui->setupUi(this);
+
+    connect(imageFetcher, &ImageFetcher::imageFetched, this, &cardInfo::onImageFetched);
+    connect(imageFetcher, &ImageFetcher::fetchFailed, this, &cardInfo::onFetchFailed);
+
 
     // Luo ajastin ikkunalle
     timeoutTimer = new QTimer(this);
@@ -19,7 +24,25 @@ cardInfo::cardInfo(QWidget *parent, accountData *data) :
     // Kun aikakatkaisu tapahtuu, tämä ikkuna sulkeutuu
     connect(timeoutTimer, &QTimer::timeout, this, &cardInfo::close);
 
+
+    QString filename = "landingpage.png";
+    QString url = Environment::base_url() + "/images/" + filename;
+    imageFetcher->fetchImage(QUrl(url));
 }
+
+void cardInfo::onImageFetched(const QPixmap &pixmap) // kun kuva on haettu niin asetetaan se labeliin
+{
+    ui->labelBG->setPixmap(pixmap); // asetetaan pixmap labeliin
+    ui->labelBG->setScaledContents(true); // skaalataan kuva labeliin sopivaksi
+}
+
+void cardInfo::onFetchFailed(const QString &error) // jos haku epäonnistuu niin asetetaan labeliin virheilmoitus
+{
+    ui->labelBG->setText("Kuvan haku epäonnistui: " + error); // jos kuva ei lataudu niin asetetaan labeliin virheilmoitus (siiretäänkö QDebugiin mieluummin??)
+}
+
+
+
 
 cardInfo::~cardInfo()
 {
