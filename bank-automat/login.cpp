@@ -385,10 +385,35 @@ void login::handleDebitChosen(int accountId) {
 
     accountDataPtr->fetchData();
 
-    // Pass accountDataPtr to cardInfo
+    // Retrieve the Customer ID (same as in the single-card branch)
+    QString customer_url = Environment::base_url() + "/cards/customer/" + ui->textUsername->text();
+    qDebug() << "login::handleDebitChosen: Customer URL: " << customer_url;
+    QNetworkRequest customer_request(customer_url);
+    customer_request.setRawHeader("Authorization", myToken);
+    QNetworkAccessManager customerManager;
+    QEventLoop loop;
+    connect(&customerManager, &QNetworkAccessManager::finished, &loop, &QEventLoop::quit);
+    QNetworkReply* customer_reply = customerManager.get(customer_request);
+    loop.exec();
+    QByteArray customer_data = customer_reply->readAll();
+    qDebug() << "login::handleDebitChosen: Customer data: " << customer_data;
+    QJsonDocument customer_doc = QJsonDocument::fromJson(customer_data);
+    int customerID = -1;
+    if (customer_doc.isArray()) {
+        QJsonArray customerArray = customer_doc.array();
+        if (!customerArray.isEmpty()) {
+            QJsonObject customerObject = customerArray.first().toObject();
+            customerID = customerObject["idcustomer"].toInt();
+            qDebug() << "login::handleDebitChosen: Customer ID: " << customerID;
+        }
+    }
+    customer_reply->deleteLater();
+
+    // Create cardInfo and pass all necessary data.
     objCardInfo = new cardInfo(this, accountDataPtr);
     objCardInfo->setUsername(ui->textUsername->text());
     objCardInfo->setMyToken(accountDataPtr->getMyToken());
+    objCardInfo->setCustomerID(customerID);  // <-- Crucial: ensure the Customer ID is set!
     connect(objCardInfo, &QDialog::finished, this, &login::onWindowFinished);
     objCardInfo->open();
 }
@@ -399,13 +424,37 @@ void login::handleCreditChosen(int accountId) {
     accountDataPtr->setUsername(ui->textUsername->text());
     accountDataPtr->setMyToken(myToken);
     accountDataPtr->setAccountId(accountId);
-
     accountDataPtr->fetchData();
+
+    // Retrieve the Customer ID.
+    QString customer_url = Environment::base_url() + "/cards/customer/" + ui->textUsername->text();
+    qDebug() << "login::handleCreditChosen: Customer URL: " << customer_url;
+    QNetworkRequest customer_request(customer_url);
+    customer_request.setRawHeader("Authorization", myToken);
+    QNetworkAccessManager customerManager;
+    QEventLoop loop;
+    connect(&customerManager, &QNetworkAccessManager::finished, &loop, &QEventLoop::quit);
+    QNetworkReply* customer_reply = customerManager.get(customer_request);
+    loop.exec();
+    QByteArray customer_data = customer_reply->readAll();
+    qDebug() << "login::handleCreditChosen: Customer data: " << customer_data;
+    QJsonDocument customer_doc = QJsonDocument::fromJson(customer_data);
+    int customerID = -1;
+    if (customer_doc.isArray()) {
+        QJsonArray customerArray = customer_doc.array();
+        if (!customerArray.isEmpty()) {
+            QJsonObject customerObject = customerArray.first().toObject();
+            customerID = customerObject["idcustomer"].toInt();
+            qDebug() << "login::handleCreditChosen: Customer ID: " << customerID;
+        }
+    }
+    customer_reply->deleteLater();
 
     // Pass accountDataPtr to cardInfo
     objCardInfo = new cardInfo(this, accountDataPtr);
     objCardInfo->setUsername(ui->textUsername->text());
     objCardInfo->setMyToken(accountDataPtr->getMyToken());
+    objCardInfo->setCustomerID(customerID);  // <-- Crucial!
     connect(objCardInfo, &QDialog::finished, this, &login::onWindowFinished);
     objCardInfo->open();
 }
