@@ -32,7 +32,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Kortinnumero:</string>
+        <string>Käyttäjä: </string>
        </property>
       </widget>
      </item>
@@ -52,6 +52,13 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="labelBG">
+     <property name="text">
+      <string>background</string>
+     </property>
+    </widget>
    </item>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">

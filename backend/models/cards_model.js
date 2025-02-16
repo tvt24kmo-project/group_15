@@ -48,7 +48,14 @@ const cards = {
     checkCardAttempts: function(cardnumber, callback) {
         return db.query("SELECT wrong_attempts FROM cards WHERE cardnumber=?", [cardnumber], callback);
     },
-    
+
+    getCustomerByCardNumber: function(cardnumber, callback) {
+        return db.query(
+            'SELECT c.idcustomer FROM customers c JOIN accounts a ON c.idcustomer = a.customer_id JOIN account_cards ac ON a.idaccount = ac.account_id JOIN cards ca ON ac.card_id = ca.idcard WHERE ca.cardnumber = ?',
+            [cardnumber],
+            callback
+        );
+    },
 }
 
 module.exports = cards;
