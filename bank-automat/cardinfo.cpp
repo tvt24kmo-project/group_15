@@ -83,6 +83,10 @@ void cardInfo::on_btnTransfer_clicked()
     timeoutTimer->stop(); // pysäytä ajastin
     // Tilisiirrot-nappia painettu
     Transfer *objTransfer = new Transfer(this);
+
+    // Välitetään accountDataPtr Transfer-ikkunaan
+    objTransfer->setAccountDataObject(accountDataPtr);
+
     connect(objTransfer, &QDialog::finished, this, &cardInfo::onWindowFinished);
     QRect geometry = this->geometry();  // Tallenna sijainti ja koko
     objTransfer->setGeometry(geometry);
