@@ -4,6 +4,7 @@
 
 #include "qdialog.h"
 #include <QTimer>
+#include "accountdata.h"
 
 namespace Ui {
 class cardInfo;
@@ -14,7 +15,7 @@ class cardInfo : public QDialog
 
     Q_OBJECT
 public:
-    explicit cardInfo(QWidget *parent = nullptr);
+    explicit cardInfo(QWidget *parent = nullptr, accountData *data = nullptr);
     ~cardInfo();
     void setUsername(const QString &newUsername);
 
@@ -31,11 +32,14 @@ private slots:
 
     void on_btnHistory_clicked();
 
+    void on_btnClose_clicked();
+
 private:
     Ui::cardInfo *ui;
     QString username;
     QByteArray myToken;
     QTimer *timeoutTimer;
+    accountData *accountDataPtr;
 };
 
 #endif // CARDINFO_H

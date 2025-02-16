@@ -36,6 +36,8 @@ private slots:
     void on_withdrawCash_clicked();
     void handleWithdrawResponse(QNetworkReply *reply);
 
+    void on_btnClose_clicked();
+
 private:
     int MINBILLSIZE = 20; // pienin seteli mitä automaatti antaa muun määrän nostoon (esim 2x20€ = ok, 1x5 tai 3x5 = ei ok)
     int cashAmount = 0; // muuttuja jossa arvo muuttuu näppäinten/muun määrän perusteella

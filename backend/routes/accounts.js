@@ -32,7 +32,7 @@ router.get('/:uname', function(request, response){
             response.json(err);
         }
         else {
-            response.json(result[0]);
+            response.json(result); // palautetaan KOKO TAULUKKO, KOSKA MULTI KORTTI EI SITTEN LÖYDÄ TILEJÄ
         }
     })
 });

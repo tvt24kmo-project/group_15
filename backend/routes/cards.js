@@ -77,6 +77,15 @@ router.get("/check-lock-status/:cardnumber", function (req, res) {
     });
 });
 
+router.get("/check-card-attempts/:cardnumber", function (req, res) {
+    cards.checkCardAttempts(req.params.cardnumber, function (err, result) {
+        if (err) {
+            res.json(err);
+        } else {
+            res.json(result);
+        }
+    });
+});
 
 
 module.exports = router;    

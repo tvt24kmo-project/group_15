@@ -28,6 +28,8 @@ public:
 private slots:
     void on_btnCompleteTransfer_clicked();
 
+    void on_btnClose_clicked();
+
 private:
     Ui::Transfer *ui;
     // QString transferUrl = Environment::base_url() + "/procedures/transfer"; tarviiko??

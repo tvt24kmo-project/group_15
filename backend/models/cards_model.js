@@ -44,6 +44,10 @@ const cards = {
     checkLockStatus: function(cardnumber, callback) {
         return db.query("SELECT islocked FROM cards WHERE cardnumber=?", [cardnumber], callback);
     },
+
+    checkCardAttempts: function(cardnumber, callback) {
+        return db.query("SELECT wrong_attempts FROM cards WHERE cardnumber=?", [cardnumber], callback);
+    },
     
 }
 

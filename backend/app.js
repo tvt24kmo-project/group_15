@@ -25,25 +25,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-// MUISTA LISÄTÄ ROUTERIT JA NIIDEN POLUT TÄNNE ETTÄ EI TULE 404 VIRHETTÄ
-app.use('/', indexRouter);
-app.use('/login', loginRouter);
-app.use(authenticateToken); // KOMMENTOI TÄMÄ RIVI POIS JOS HALUAT TESTATA ILMAN KIRJAUTUMISTA
-app.use('/customers', usersRouter);
-app.use('/cards', cardsRouter);
-app.use('/transactions', transactionsRouter);
-app.use('/accounts', accountsRouter);
-app.use('/procedures', proceduresRouter);
-
-
-
-
-app.use((req, res, next) => {
-    console.log(`Incoming request: ${req.method} ${req.path}`);
-    next();
-});
-
 function authenticateToken(req, res, next) {
+  const unprotectedPaths = [ // luodaan lista reiteistä, jotka eivät vaadi kirjautumista (eli tokenia -- väärällä pinnillä kirjautuessa ei saa tokenia ja näin ollen ei pääse näihin reitteihin normaalisti, nyt ne ei ole suojattu enää)
+    '/cards/check-card-attempts',
+    '/cards/update-card-attempts',
+    '/cards/check-lock-status'
+  ];
+
+  if (unprotectedPaths.some(path => req.path.startsWith(path))) {
+    return next();
+  }
+
+
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]
   
@@ -58,6 +51,26 @@ function authenticateToken(req, res, next) {
   
       next()
     })
-  } 
+}
+
+
+// MUISTA LISÄTÄ ROUTERIT JA NIIDEN POLUT TÄNNE ETTÄ EI TULE 404 VIRHETTÄ
+app.use('/', indexRouter);
+app.use('/login', loginRouter);
+app.use('/cards', cardsRouter);
+app.use(authenticateToken); // KOMMENTOI TÄMÄ RIVI POIS JOS HALUAT TESTATA ILMAN KIRJAUTUMISTA
+app.use('/customers', usersRouter);
+app.use('/transactions', transactionsRouter);
+app.use('/accounts', accountsRouter);
+app.use('/procedures', proceduresRouter);
+
+
+
+
+app.use((req, res, next) => {
+    console.log(`Incoming request: ${req.method} ${req.path}`);
+    next();
+});
+
 
 module.exports = app;

@@ -11,6 +11,7 @@ CONFIG += c++17
 SOURCES += \
     accountdata.cpp \
     cardinfo.cpp \
+    debitorcredit.cpp \
     environment.cpp \
     historywindow.cpp \
     imagefetcher.cpp \
@@ -24,6 +25,7 @@ SOURCES += \
 HEADERS += \
     accountdata.h \
     cardinfo.h \
+    debitorcredit.h \
     environment.h \
     historywindow.h \
     imagefetcher.h \
@@ -36,6 +38,7 @@ HEADERS += \
 FORMS += \
     accountdata.ui \
     cardinfo.ui \
+    debitorcredit.ui \
     historywindow.ui \
     login.ui \
     mainwindow.ui \

@@ -33,9 +33,13 @@ public:
     
     QString getAccountIban() const;
 
+    void fetchData();
+
+    void setAccountId(int id);
 private slots:
     void showDataSlot(QNetworkReply *reply);
-    void fetchData();
+    void on_btnClose_clicked();
+
 private:
     Ui::accountData *ui;
     QString username;
@@ -47,6 +51,7 @@ private:
 
     int accountId = 0;
     QTimer *timeoutTimer;
+    QJsonObject findAccountObject(const QJsonArray &jsonArray, int targetAccountId);
 };
 
 #endif // ACCOUNTDATA_H
