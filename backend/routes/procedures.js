@@ -46,20 +46,12 @@ router.post('/transfer', function (req, res) {
     procedures.transfer(sender_account, receiver_account, transfer_amount, function (err, result) {
         if (err) {
             console.error(err); // Log error for debugging
+            if (err.sqlState) { // jos virhe tulee sql puolelta
+                return res.status(400).json({ error: err.message }); //heitetään sql virhe ulos 
+            }
             return res.status(500).json({ error: 'An error occurred while processing the transfer.' });
         }
-
-        // Extract status from result
-        const status = result.status;
-
-        // Return response based on status
-        if (status === 'Success') {
-            res.json({ message: 'Withdrawal successful.' });
-        } else if (status === 'Insufficient funds') {
-            res.status(400).json({ error: 'Insufficient funds.' });
-        } else {
-            res.status(500).json({ error: 'Unexpected status: ' + status });
-        }
+        res.json({ message: 'Transfer successful.' }); // jos ei tullut virheitä niin palautetaan onnistunut viesti
     });
 });
 
