@@ -33,6 +33,8 @@ router.post('/withdraw', function (req, res) {
 
 
 router.post('/transfer', function (req, res) {
+    console.log("Request received:", req.body); // Tulostetaan mitä postman lähettää
+
     const { sender_account, receiver_account, transfer_amount } = req.body;
 
     // Validate input
@@ -40,19 +42,23 @@ router.post('/transfer', function (req, res) {
         return res.status(400).json({ error: 'Invalid input: sender_account, receiver_account, and a positive transfer_amount are required.' });
     }
 
-    // Call the ExecuteTransfer procedure
-    procedures.executeTransfer(sender_account, receiver_account, transfer_amount, function (err, result) {
+    // Call the transfer procedure
+    procedures.transfer(sender_account, receiver_account, transfer_amount, function (err, result) {
         if (err) {
             console.error(err); // Log error for debugging
             return res.status(500).json({ error: 'An error occurred while processing the transfer.' });
         }
 
-        // Handle the result and return appropriate response
-        // (Assuming your procedures return a message or success/failure indicator)
-        if (result && result.message) {
-            res.json({ message: result.message });  // Send success message back to the frontend
+        // Extract status from result
+        const status = result.status;
+
+        // Return response based on status
+        if (status === 'Success') {
+            res.json({ message: 'Withdrawal successful.' });
+        } else if (status === 'Insufficient funds') {
+            res.status(400).json({ error: 'Insufficient funds.' });
         } else {
-            res.status(500).json({ error: 'Transfer failed due to an unexpected issue.' });
+            res.status(500).json({ error: 'Unexpected status: ' + status });
         }
     });
 });
