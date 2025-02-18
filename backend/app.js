@@ -18,6 +18,14 @@ var proceduresRouter = require('./routes/procedures');
 const backupper = require('./backupper');
 const cron = require("node-cron"); // backup: ajoitus
 // backup-osat loppu.
+//backup-osat 
+const backupper = require('./backupper');
+const cron = require("node-cron"); // backup: ajoitus
+// backup-osat loppu.
+
+
+
+
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -71,6 +79,12 @@ app.use((req, res, next) => {
     console.log(`Incoming request: ${req.method} ${req.path}`);
     next();
 });
+
+
+//backup ajoitettu alkaa:
+cron.schedule("0 3 * * *", backupper.backupDatabase); // backupataan joka päivä klo 03:00. ("* * * * * *"), on joka sekunti
+//backup ajoitettu loppu.
+
 
 
 //backup ajoitettu alkaa:
