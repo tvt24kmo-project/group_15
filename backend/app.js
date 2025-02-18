@@ -14,10 +14,12 @@ var accountsRouter = require('./routes/accounts');
 var loginRouter = require('./routes/login');
 const jwt = require('jsonwebtoken');
 var proceduresRouter = require('./routes/procedures');
-//backup-osat alla. Cron täytyy asentaa: npm install node-cron
-const { exec } = require("child_process"); // backup: backend viestii linukalle
-const cron = require("node-cron"); // backup: kello
-const fs = require("fs"); // backup: filesystem, tarvitaan cronjobia varten
+//backup-osat 
+const backupper = require('./backupper');
+const cron = require("node-cron"); // backup: ajoitus
+// backup-osat loppu.
+
+
 
 
 
@@ -69,42 +71,15 @@ app.use('/transactions', transactionsRouter);
 app.use('/accounts', accountsRouter);
 app.use('/procedures', proceduresRouter);
 
-
-
-
 app.use((req, res, next) => {
     console.log(`Incoming request: ${req.method} ${req.path}`);
     next();
 });
 
 
-//backup koodi alkaa:
-const BACKUP_DIR = path.join(__dirname, "backup");
-if (!fs.existsSync(BACKUP_DIR)) {
-  fs.mkdirSync(BACKUP_DIR, { recursive: true });
-}
-const DB_USER = process.env.DB_USER;
-const DB_PASSWORD = process.env.DB_PASSWORD;
-const DB_NAME = process.env.DB_NAME;
-const backupFile = path.join(BACKUP_DIR, "backup.sql");
-const backupCommand = 'mysqldump -u '+DB_USER +' -p'+DB_PASSWORD+' '+DB_NAME +' > ' +backupFile;
-
-function backupDatabase() {  
-  console.log(backupCommand);
-  exec(backupCommand, (error, stdout, stderr) => {
-    if (error) {
-      console.error(error.message);
-      return;
-    }
-    //if (stderr) {
-    //  console.error(stderr);
-    //  return;
-    //}
-  console.log("Backup database done");
-  });
-}
-cron.schedule("0 3 * * *", backupDatabase); // backupataan joka päivä klo 03:00. ("* * * * * *"), on joka sekunti
-//backup koodi loppu
+//backup ajoitettu alkaa:
+cron.schedule("0 3 * * *", backupper.backupDatabase); // backupataan joka päivä klo 03:00. ("* * * * * *"), on joka sekunti
+//backup ajoitettu loppu.
 
 
 
