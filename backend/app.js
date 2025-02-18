@@ -19,10 +19,6 @@ const backupper = require('./backupper');
 const cron = require("node-cron"); // backup: ajoitus
 // backup-osat loppu.
 
-
-
-
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended:false }));
