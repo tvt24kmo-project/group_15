@@ -37,6 +37,7 @@ Projektiryhmä koostuu seuraavista henkilöistä:
 - **Tapahtumahistoria:** Näyttää tilihistorian sivuttain
 - **Epäaktiivisuuden timeri:** Automaattinen uloskirjautuminen epäaktiivisuuden jälkeen
 - **Tietokannan varmuuskopio:** Ottaa dumpin tietokannasta joka päivä klo 03:00
+- **CRUD Operaatiot:** Node.js APIin on ohjelmoitu CRUD operaatiot kaikille sovelluksen tauluille
 
 
 ## Teknologiastäkki
@@ -79,9 +80,10 @@ Projektiryhmä koostuu seuraavista henkilöistä:
    * Importtaa MySQL dumppitiedosto:
      * Navigoi `Server -> Data Import`
      * Valitse `Import from Self-Contained File`
-     * Valitse `2_Dump_TESTING...sql`
+     * Valitse `/backend/2_Dump_TESTING...sql`
      * Valitse `atm_automat` importin kohteeksi (default target schema)
      * Importtaa dumppi
+   * `/backend/sql/TESTINGACCOUNT_INFO` tiedostossa on tietokannan dumpissa olevat kortit sekä käyttäjät ym.
 4. **Luo `.env` tiedosto:**
     * Luo `.env` tiedosto `backend` kansioon
     * Kopioi `env_template` tiedoston tiedot `.env` tiedostoon
@@ -110,7 +112,7 @@ Projektiryhmä koostuu seuraavista henkilöistä:
 Tietokannan ER-kaavio:
 <img src="img/ER_kaavio.png">
 
-Sovelluksen posteri:
+Sovelluksen englanninkielinen posteri:
 <img src="img/poster.png">
 
 ## Lisenssi

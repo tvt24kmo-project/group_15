@@ -14,6 +14,7 @@ var accountsRouter = require('./routes/accounts');
 var loginRouter = require('./routes/login');
 const jwt = require('jsonwebtoken');
 var proceduresRouter = require('./routes/procedures');
+var acRouter = require('./routes/accounts_cards');
 
 
 app.use(logger('dev'));
@@ -58,12 +59,12 @@ function authenticateToken(req, res, next) {
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/cards', cardsRouter);
-app.use(authenticateToken); // KOMMENTOI TÄMÄ RIVI POIS JOS HALUAT TESTATA ILMAN KIRJAUTUMISTA
+//app.use(authenticateToken); // KOMMENTOI TÄMÄ RIVI POIS JOS HALUAT TESTATA ILMAN KIRJAUTUMISTA
 app.use('/customers', usersRouter);
 app.use('/transactions', transactionsRouter);
 app.use('/accounts', accountsRouter);
 app.use('/procedures', proceduresRouter);
-
+app.use('/accounts_cards', acRouter);
 
 
 
