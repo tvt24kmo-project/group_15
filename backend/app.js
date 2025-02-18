@@ -14,14 +14,11 @@ var accountsRouter = require('./routes/accounts');
 var loginRouter = require('./routes/login');
 const jwt = require('jsonwebtoken');
 var proceduresRouter = require('./routes/procedures');
-//backup-osat 
+//backup-osat:
 const backupper = require('./backupper');
 const cron = require("node-cron"); // backup: ajoitus
 // backup-osat loppu.
-//backup-osat 
-const backupper = require('./backupper');
-const cron = require("node-cron"); // backup: ajoitus
-// backup-osat loppu.
+
 
 
 
@@ -80,17 +77,9 @@ app.use((req, res, next) => {
     next();
 });
 
-
 //backup ajoitettu alkaa:
 cron.schedule("0 3 * * *", backupper.backupDatabase); // backupataan joka päivä klo 03:00. ("* * * * * *"), on joka sekunti
 //backup ajoitettu loppu.
-
-
-
-//backup ajoitettu alkaa:
-cron.schedule("0 3 * * *", backupper.backupDatabase); // backupataan joka päivä klo 03:00. ("* * * * * *"), on joka sekunti
-//backup ajoitettu loppu.
-
 
 
 module.exports = app;
