@@ -16,8 +16,8 @@
   <widget class="QLabel" name="labelDOC">
    <property name="geometry">
     <rect>
-     <x>130</x>
-     <y>20</y>
+     <x>140</x>
+     <y>50</y>
      <width>470</width>
      <height>85</height>
     </rect>
@@ -37,8 +37,8 @@
    </property>
    <property name="geometry">
     <rect>
-     <x>450</x>
-     <y>200</y>
+     <x>440</x>
+     <y>310</y>
      <width>16</width>
      <height>16</height>
     </rect>
@@ -52,37 +52,11 @@
     <string>TextLabel</string>
    </property>
   </widget>
-  <widget class="QLabel" name="labelCC">
-   <property name="geometry">
-    <rect>
-     <x>440</x>
-     <y>320</y>
-     <width>220</width>
-     <height>220</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
-     <y>320</y>
-     <width>220</width>
-     <height>220</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="buttonDebit">
    <property name="geometry">
     <rect>
-     <x>420</x>
-     <y>160</y>
+     <x>410</x>
+     <y>270</y>
      <width>263</width>
      <height>136</height>
     </rect>
@@ -99,8 +73,8 @@
   <widget class="QPushButton" name="buttonCredit">
    <property name="geometry">
     <rect>
-     <x>110</x>
-     <y>160</y>
+     <x>100</x>
+     <y>270</y>
      <width>237</width>
      <height>136</height>
     </rect>
