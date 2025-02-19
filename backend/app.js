@@ -14,14 +14,12 @@ var accountsRouter = require('./routes/accounts');
 var loginRouter = require('./routes/login');
 const jwt = require('jsonwebtoken');
 var proceduresRouter = require('./routes/procedures');
+var acRouter = require('./routes/accounts_cards');
+
 //backup-osat:
 const backupper = require('./backupper');
 const cron = require("node-cron"); // backup: ajoitus
 // backup-osat loppu.
-
-
-
-
 
 
 app.use(logger('dev'));
@@ -71,6 +69,8 @@ app.use('/customers', usersRouter);
 app.use('/transactions', transactionsRouter);
 app.use('/accounts', accountsRouter);
 app.use('/procedures', proceduresRouter);
+app.use('/accounts_cards', acRouter);
+
 
 app.use((req, res, next) => {
     console.log(`Incoming request: ${req.method} ${req.path}`);
