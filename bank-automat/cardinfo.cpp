@@ -4,11 +4,13 @@
 #include "withdrawcash.h"
 #include "transfer.h"
 #include "historywindow.h"
+#include "login.h"
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QApplication>
 
 cardInfo::cardInfo(QWidget *parent, accountData *data) : 
     QDialog(parent)
@@ -198,9 +200,41 @@ void cardInfo::on_btnHistory_clicked()
     objHistoryWindow->open();
 }
 
+void cardInfo::closeEvent(QCloseEvent *event)
+{
+    if (QWidget *parentWidget = this->parentWidget()) {
+        if (login *loginWindow = qobject_cast<login *>(parentWidget)) {
+            loginWindow->clearLoginFields();
+            loginWindow->close();
+        }
+    }
+
+    foreach(QWidget *widget, QApplication::topLevelWidgets()) {
+        if (QMainWindow *mainWindow = qobject_cast<QMainWindow *>(widget)) {
+            mainWindow->show();
+            break;
+        }
+    }
+
+    event->accept();
+}
 
 void cardInfo::on_btnClose_clicked()
 {
-    cardInfo::close();
+    if (QWidget *parentWidget = this->parentWidget()) {
+        if (login *loginWindow = qobject_cast<login *>(parentWidget)) {
+            loginWindow->clearLoginFields();
+            loginWindow->close();
+        }
+    }
+
+    foreach(QWidget *widget, QApplication::topLevelWidgets()) {
+        if (QMainWindow *mainWindow = qobject_cast<QMainWindow *>(widget)) {
+            mainWindow->show();
+            break;
+        }
+    }
+
+    this->close();
 }
 
