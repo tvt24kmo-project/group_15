@@ -23,13 +23,14 @@ const procedures = {
         console.log("Executing SQL CALL ExecuteTransfer with:"); // debuggaukseen
         console.log("   Sender:", sender_account);
         console.log("   Receiver:", receiver_account);
-        console.log("   Amount:", transfer_amount);
+        console.log("   Amount:", amount); // käytetään fiksattua amounttia
 
         db.query(
             "CALL ExecuteTransfer(?, ?, ?);", 
-            [sender_account, receiver_account, transfer_amount], 
+            [sender_account, receiver_account, amount], // <<- sama täällä
             function (err, results) {
                 if (err) {
+                    console.error("-----SQL VIRHE-----:", err); // heitetään koko sql virhe ulos
                     return callback(err, null);
                 }
                 callback(null, { message: 'Siirto onnistui' });
