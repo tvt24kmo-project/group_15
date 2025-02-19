@@ -4,13 +4,23 @@
 #include "withdrawcash.h"
 #include "transfer.h"
 #include "historywindow.h"
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 
 cardInfo::cardInfo(QWidget *parent, accountData *data) : 
     QDialog(parent)
     , ui(new Ui::cardInfo)
     , accountDataPtr(data)
+    , imageFetcher(new ImageFetcher(this))
 {
     ui->setupUi(this);
+
+    connect(imageFetcher, &ImageFetcher::imageFetched, this, &cardInfo::onImageFetched);
+    connect(imageFetcher, &ImageFetcher::fetchFailed, this, &cardInfo::onFetchFailed);
+
 
     // Luo ajastin ikkunalle
     timeoutTimer = new QTimer(this);
@@ -19,7 +29,25 @@ cardInfo::cardInfo(QWidget *parent, accountData *data) :
     // Kun aikakatkaisu tapahtuu, tämä ikkuna sulkeutuu
     connect(timeoutTimer, &QTimer::timeout, this, &cardInfo::close);
 
+
+    QString filename = "landingpage.png";
+    QString url = Environment::base_url() + "/images/" + filename;
+    imageFetcher->fetchImage(QUrl(url));
 }
+
+void cardInfo::onImageFetched(const QPixmap &pixmap) // kun kuva on haettu niin asetetaan se labeliin
+{
+    ui->labelBG->setPixmap(pixmap); // asetetaan pixmap labeliin
+    ui->labelBG->setScaledContents(true); // skaalataan kuva labeliin sopivaksi
+}
+
+void cardInfo::onFetchFailed(const QString &error) // jos haku epäonnistuu niin asetetaan labeliin virheilmoitus
+{
+    ui->labelBG->setText("Kuvan haku epäonnistui: " + error); // jos kuva ei lataudu niin asetetaan labeliin virheilmoitus (siiretäänkö QDebugiin mieluummin??)
+}
+
+
+
 
 cardInfo::~cardInfo()
 {
@@ -29,13 +57,71 @@ cardInfo::~cardInfo()
 void cardInfo::setUsername(const QString &newUsername)
 {
     username = newUsername;
-    ui->labelUsername->setText(username);
+    //ui->labelUsername->setText(username);
+}
+
+void cardInfo::setCustomerID(const int &newCustomerID)
+{
+    //qDebug() << "cardInfo::setCustomerID: customerID received: " << newCustomerID; // More specific debug
+    customerID = newCustomerID;
+    fetchFullName(customerID);
+}
+
+void cardInfo::fetchFullName(int customerId) {
+    //qDebug() << "cardInfo::fetchFullName: Customer ID: " << customerId;
+    QString url = Environment::base_url() + "/customers/fullname/" + QString::number(customerId);
+    //qDebug() << "cardInfo::fetchFullName: URL: " << url;
+    QNetworkRequest request((url));
+
+    //qDebug() << "cardInfo::fetchFullName: Token before setting header: " << myToken;
+    request.setRawHeader("Authorization", myToken);
+    //qDebug() << "cardInfo::fetchFullName: Token after setting header: " << request.rawHeader("Authorization");
+
+    QNetworkAccessManager *nam = new QNetworkAccessManager(this);
+    connect(nam, &QNetworkAccessManager::finished, this, &cardInfo::onFullNameFetched);
+    nam->get(request);
+}
+
+
+void cardInfo::onFullNameFetched(QNetworkReply *reply) {
+    //qDebug() << "cardInfo::onFullNameFetched: Entered";
+    if (reply->error()) {
+        //qDebug() << "cardInfo::onFullNameFetched: Network error: " << reply->errorString();
+        ui->labelUsername->setText("virhe");
+        reply->deleteLater();
+        return;
+    }
+
+    QByteArray response_data = reply->readAll();
+    //qDebug() << "cardInfo::onFullNameFetched: Raw response data: " << response_data;
+    QJsonDocument json_doc = QJsonDocument::fromJson(response_data);
+    //qDebug() << "cardInfo::onFullNameFetched: Parsed JSON doc: " << json_doc;
+
+    if (json_doc.isArray()) {
+        QJsonArray json_array = json_doc.array();
+        //qDebug() << "cardInfo::onFullNameFetched: JSON array: " << json_array;
+        if (!json_array.isEmpty()) {
+            QJsonObject json_obj = json_array.first().toObject();
+            //qDebug() << "cardInfo::onFullNameFetched: JSON object: " << json_obj;
+            QString fullName = json_obj["fname"].toString() + " " + json_obj["lname"].toString();
+            //qDebug() << "cardInfo::onFullNameFetched: Extracted full name: " << fullName;
+            ui->labelUsername->setText(fullName);
+        } else {
+            //qDebug() << "cardInfo::onFullNameFetched: JSON array is empty";
+            ui->labelUsername->setText("nimeä ei löydy");
+        }
+    } else {
+        //qDebug() << "cardInfo::onFullNameFetched: JSON doc is not an array";
+        ui->labelUsername->setText("väärä vastaus");
+    }
+
+    reply->deleteLater();
 }
 
 void cardInfo::setMyToken(const QByteArray &newMyToken)
 {
+    //qDebug() << "cardInfo::setMyToken: Token received: " << newMyToken; // Debug the token
     myToken = newMyToken;
-    // qDebug()<<myToken;
 }
 
 void cardInfo::onWindowFinished(){
@@ -103,6 +189,10 @@ void cardInfo::on_btnHistory_clicked()
     objAccountData->setMyToken(myToken);
     objAccountData->fetchData();
     */
+
+    accountDataPtr->setUsername(username); // ladataan "hiljaa" käyttäjän tiedot koska historiaa ei näy jos ei avaa accountdataa ensin.
+    accountDataPtr->setMyToken(myToken);
+    accountDataPtr->fetchData();
 
     HistoryWindow *objHistoryWindow = new HistoryWindow(this);
     objHistoryWindow->setAccountDataObject(accountDataPtr); // asetetaan accountData objekti historyWindow objektiin

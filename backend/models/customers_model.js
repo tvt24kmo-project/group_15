@@ -19,7 +19,11 @@ const customers = {
 
     deleteCustomer: function (id, callback) { // Poista asiakas ID:n perusteella
         return db.query("DELETE FROM customers WHERE idcustomer=?", [id], callback);
-    }
+    },
+
+    getFullName: function (id, callback) {
+        return db.query("SELECT fname, lname FROM customers WHERE idcustomer=?", [id], callback);
+    },
 };
 
 module.exports = customers;
