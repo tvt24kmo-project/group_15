@@ -9,7 +9,7 @@ const DB_PASSWORD = process.env.DB_PASSWORD
 const DB_NAME = process.env.DB_NAME
 
 
-const BACKUP_DIR = path.join(__dirname, "backup");
+const BACKUP_DIR = "/backup"; // tallennetaan erilliseen kansioon koska github actions ajaa yli backend/backup kansion joten nyt pysyvät tallessa vaikka tulisi uusi versio backendistä
 if (!fs.existsSync(BACKUP_DIR)) {
   fs.mkdirSync(BACKUP_DIR, { recursive: true });
 }
@@ -21,12 +21,8 @@ function backupDatabase(callback) {
   let day = ("0" + datetime.getDate()).slice(-2);
   let backupFile = path.join(BACKUP_DIR, `backup_${year}_${month}_${day}.sql`);
   
-  const sanitizedUser = DB_USER.replace(/[^a-zA-Z0-9_]/g, '');
-  const sanitizedPassword = DB_PASSWORD.replace(/[^a-zA-Z0-9_]/g, '');
-  const sanitizedDbName = DB_NAME.replace(/[^a-zA-Z0-9_]/g, '');
-  const sanitizedBackupFile = backupFile.replace(/[^a-zA-Z0-9_/.]/g, '');
-  
-  let backupCommand = 'mysqldump ' +'-u '+sanitizedUser +' -p' +sanitizedPassword +' ' +sanitizedDbName +' > ' +sanitizedBackupFile;
+  // salasanan sanitisaatio poisti salasanan erikoismerkit, sekä tietokannan sanitisaatio poisti tietokannan erikoismerkit (_)
+  let backupCommand = 'mysqldump ' +'-u '+DB_USER +' -p' +DB_PASSWORD +' ' +DB_NAME +' > ' +backupFile;
   exec(backupCommand, (error, stdout, stderr) => {
     if (error) {
       console.error("Error executing command:", error.message);
