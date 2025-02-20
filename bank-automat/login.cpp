@@ -464,5 +464,10 @@ void login::on_btnCancel_clicked()
     this->close();
 }
 
+void login::clearLoginFields()
+{
+    ui->textPassword->clear();
+    ui->textUsername->clear();
+}
 
 
