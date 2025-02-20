@@ -1,5 +1,5 @@
 // backupper.js
-// Description: This file is used to backup the database.
+// Description: This file is used to backup the database..
 //
 var path = require('path');
 const fs = require("fs"); // backup: filesystem, tarvitaan cronjobia varten
