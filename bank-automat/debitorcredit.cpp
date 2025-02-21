@@ -4,6 +4,8 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QMainWindow>
+#include "login.h"
 
 
 DebitOrCredit::DebitOrCredit(QWidget *parent, accountData *data)
@@ -95,4 +97,24 @@ void DebitOrCredit::on_buttonDebit_clicked()
         qDebug() << "Debit Account ID: " << debitAccountId;
         accept();
     }
+}
+
+
+void DebitOrCredit::closeEvent(QCloseEvent *event)
+{
+    if (QWidget *parentWidget = this->parentWidget()) {
+        if (login *loginWindow = qobject_cast<login *>(parentWidget)) {
+            loginWindow->clearLoginFields();
+            loginWindow->close();
+        }
+    }
+
+    foreach(QWidget *widget, QApplication::topLevelWidgets()) {
+        if (QMainWindow *mainWindow = qobject_cast<QMainWindow *>(widget)) {
+            mainWindow->show();
+            break;
+        }
+    }
+
+    event->accept();
 }
