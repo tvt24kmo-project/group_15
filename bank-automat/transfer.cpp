@@ -9,7 +9,7 @@ Transfer::Transfer(QWidget *parent)
 
     // Luo ajastin ikkunalle
     timeoutTimer = new QTimer(this);
-    timeoutTimer->setInterval(10000);
+    timeoutTimer->setInterval(30000);
     timeoutTimer->start();
     // Kun aikakatkaisu tapahtuu, tämä ikkuna sulkeutuu
     connect(timeoutTimer, &QTimer::timeout, this, &Transfer::close);
@@ -21,6 +21,11 @@ Transfer::~Transfer()
     delete ui;
 }
 
+void Transfer::setAccountDataObject(accountData *accountData)
+{
+    myAccountDataObject = accountData;
+}
+
 void Transfer::on_btnCompleteTransfer_clicked() {
     timeoutTimer->start();  // Käynnistetään ajastin uudelleen
 
@@ -29,25 +34,95 @@ void Transfer::on_btnCompleteTransfer_clicked() {
     if(transferAmount < 0) { // Jos yrittää negatiivista siirtoa
         ui->labelTransferInfo->setText("Syötä positiivinen siirtosumma!");
     }
-    else if (receiverAccount.isEmpty()) {
+    else if (receiverAccount.isEmpty()) { // Jos ei ole kirjoittanut vastaanottajan tilinroa
         ui->labelTransferInfo->setText("Syötä vastaanottajan tilinumero!");
         return;
     }
-    else if (transferAmount == 0 ) {
+    else if (transferAmount == 0 ) { // Jos ei ole kirjoittanut siirron määrää
         ui->labelTransferInfo->setText("Syötä siirron määrä!");
     }
-    else {
-        qDebug()<<"Siirretään " + QString::number(transferAmount) + "€ tilille" ; // Tieto konsoliin seurantaa varten
-        ui->lineTransferAmount->setText("0"); // Nollataan labeli
-        ui->labelTransferInfo->clear(); // Tyhjennetään mahdolliset aiemmat virheilmoitukset
-
-        qDebug() << "Siirretään " + QString::number(transferAmount) + "€ tilille " + receiverAccount;
-        ui->labelTransferInfo->setText("Siirto suoritettu onnistuneesti!");
+    else if (myAccountDataObject == nullptr) { // Tarkista, että myAccountDataObject ei ole null
+        qDebug() << "Virhe: myAccountDataObject on null!";
+        ui->labelTransferInfo->setText("myAccountDataObject on null");
+        return;
+    } else {
+        // Kun kaikki on kunnossa, tehdään siirto
+        QString senderAccount = (myAccountDataObject->getAccountIban());
+        sendTransferRequest(senderAccount, receiverAccount, transferAmount);
+        ui->labelTransferInfo->setText("Tilisiirto suoritettu onnistuneesti!");
+        ui->lineTransferAmount->setText(""); // nollataan kenttä
+        ui->lineReceiver->setText(""); // nollataan kenttä
     }
+}
+
+void Transfer::sendTransferRequest(const QString &senderAccount, const QString &receiverAccount, double transferAmount) {
+    QJsonObject jsonObj;
+    QNetworkRequest request(transferUrl);
+    request.setRawHeader("Authorization", myAccountDataObject->getMyToken());
+    timeoutTimer->start();  // Käynnistetään ajastin uudelleen
+
+    // Varmistetaan, että myAccountDataObject on olemassa ja että sen tilitiedot saadaan haettua
+    if (myAccountDataObject) {
+        // Täytetään lähettäjän tilitiedot JSON-objektiin
+        jsonObj.insert("sender_account", senderAccount); // Lähettäjän tili
+        jsonObj.insert("receiver_account", receiverAccount); // Vastaanottajan tili
+        jsonObj.insert("transfer_amount", transferAmount); // Siirrettävä summa
+    } else {
+        qDebug() << "Käyttäjän tiliä ei löytynyt";
+        return;  // Jos ei löydy, lopetetaan tilisiirron lähettäminen
+    }
+
+    // Lähetetään JSON-objekti palvelimelle
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+    // Muutetaan JSON-objekti QByteArray-muotoon
+    QJsonDocument doc(jsonObj);
+    QByteArray data = doc.toJson();
+
+    // Lähetetään POST-pyyntö palvelimelle
+    QNetworkReply *reply = manager->post(request, data);
+
+    connect(reply, &QNetworkReply::finished, this, [=]() {
+        if (reply->error() == QNetworkReply::NoError) {
+            // Vastaus on saapunut ja se on virheetön
+            QByteArray responseData = reply->readAll(); // Luetaan koko palvelimen vastaus
+            qDebug() << "Vastaanotettu data:" << responseData; // Näytetään vastaanotettu data debug-ikkunassa
+
+            // Muutetaan vastaanotettu data QJsonDocument-objektiksi
+            QJsonDocument doc = QJsonDocument::fromJson(responseData);
+
+            if (doc.isArray()) {
+                // Jos vastaus on taulukko (esim. lista tileistä)
+                QJsonArray jsonArray = doc.array();
+                for (const QJsonValue &value : jsonArray) {
+                    QJsonObject obj = value.toObject(); // Saadaan yksittäinen objekti taulukosta
+                    qDebug() << "idaccount:" << obj["idaccount"].toInt();
+                    qDebug() << "balance:" << obj["balance"].toString();
+                }
+            } else if (doc.isObject()) {
+                // Jos vastaus on yksittäinen objekti (esim. tilin tiedot)
+                QJsonObject jsonObj = doc.object();
+                qDebug() << "idaccount:" << jsonObj["idaccount"].toInt();
+                qDebug() << "balance:" << jsonObj["balance"].toString();
+            } else {
+                qDebug() << "Virheellinen JSON-vastaus";
+            }
+        } else {
+            qDebug() << "Virhe: " << reply->errorString();  // Virheilmoitus
+            // Tarkistetaan, onko virhekoodi 400 (Bad Request)
+            if (reply->error() == QNetworkReply::ProtocolInvalidOperationError ||
+                reply->error() == QNetworkReply::ContentOperationNotPermittedError) {
+                ui->labelTransferInfo->setText("Väärä tilinumero");
+            } else {
+                ui->labelTransferInfo->setText("Siirto epäonnistui: " + reply->errorString());
+            }
+        }
+        reply->deleteLater();
+    });
 }
 
 void Transfer::on_btnClose_clicked()
 {
-    Transfer::close();
+    this->close();
 }
-

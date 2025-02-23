@@ -1,4 +1,6 @@
--- MySQL dump 10.13  Distrib 8.0.40, for Win64 (x86_64)
+CREATE DATABASE  IF NOT EXISTS `atm_automat` /*!40100 DEFAULT CHARACTER SET utf8mb3 */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `atm_automat`;
+-- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: atm_automat
 -- ------------------------------------------------------
@@ -18,8 +20,6 @@
 --
 -- Table structure for table `account_cards`
 --
-
-USE atm_automat;
 
 DROP TABLE IF EXISTS `account_cards`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -70,7 +70,7 @@ CREATE TABLE `accounts` (
 
 LOCK TABLES `accounts` WRITE;
 /*!40000 ALTER TABLE `accounts` DISABLE KEYS */;
-INSERT INTO `accounts` VALUES (7,1,999069.98,'fi5566667777888898',1221312.00),(9,2,100000.00,'fi1122223333444455',0.00),(10,3,100000.00,'fi123456678912',10000.00),(11,3,98765.00,'fi9988887777666655',0.00);
+INSERT INTO `accounts` VALUES (7,1,999049.98,'fi5566667777888898',1221312.00),(9,2,100003.00,'fi1122223333444455',0.00),(10,3,100000.00,'fi123456678912',10000.00),(11,3,98762.00,'fi9988887777666655',0.00);
 /*!40000 ALTER TABLE `accounts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -102,25 +102,6 @@ LOCK TABLES `cards` WRITE;
 INSERT INTO `cards` VALUES (15,'Credit','$2a$10$uSUqClkJ6p8D9aSIxri1v.kffIX5DK9T0bbOfvL3fTPAV9WaVHinq',0,0,'1111222233334444'),(16,'Debit','$2a$10$.o1rHTcqI/vh.c69t5.Ma.O1sXQyRHG6io0xI.FxPkHchmdc8QXjK',0,0,'1212343456567878'),(17,'Multi','$2a$10$y./CAdmKeW/rZ8JtjSYhKO7jqg9nBYW.d8cLb7Xe5inwSy28uFRfG',0,0,'9999888877776666');
 /*!40000 ALTER TABLE `cards` ENABLE KEYS */;
 UNLOCK TABLES;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8mb4 */ ;
-/*!50003 SET character_set_results = utf8mb4 */ ;
-/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
-DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `lock_card_after_wrong_attempts` BEFORE UPDATE ON `cards` FOR EACH ROW BEGIN
-    IF NEW.wrong_attempts >= 3 THEN
-        SET NEW.islocked = 1;
-    END IF;
-END */;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `customers`
@@ -166,7 +147,7 @@ CREATE TABLE `transactions` (
   PRIMARY KEY (`idtransactions`),
   KEY `fk_transaction_card_idx` (`account_id`),
   CONSTRAINT `fk_transaction_card` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`idaccount`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=113 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -175,17 +156,108 @@ CREATE TABLE `transactions` (
 
 LOCK TABLES `transactions` WRITE;
 /*!40000 ALTER TABLE `transactions` DISABLE KEYS */;
-INSERT INTO `transactions` VALUES (55,7,0.01,'2025-01-25 01:31:38','withdraw'),(56,7,0.01,'2025-01-28 00:59:15','withdraw'),(57,7,0.01,'2025-01-29 20:39:01','withdraw'),(58,7,20.00,'2025-01-29 23:05:07','withdraw'),(59,7,40.00,'2025-01-30 00:10:21','withdraw'),(60,7,20.00,'2025-01-30 00:15:42','withdraw'),(61,7,20.00,'2025-01-30 00:17:27','withdraw'),(62,7,20.00,'2025-01-30 00:19:45','withdraw'),(63,7,20.00,'2025-01-30 00:20:54','withdraw'),(64,7,20.00,'2025-01-30 00:21:32','withdraw'),(65,7,20.00,'2025-01-30 00:23:36','withdraw'),(66,7,20.00,'2025-01-30 00:25:22','withdraw'),(67,7,20.00,'2025-01-30 00:27:47','withdraw'),(68,7,40.00,'2025-01-30 00:29:30','withdraw'),(69,7,50.00,'2025-01-30 00:29:41','withdraw'),(70,7,120.00,'2025-01-30 00:29:46','withdraw'),(71,7,120.00,'2025-01-30 12:47:54','withdraw'),(72,7,70.00,'2025-01-30 12:47:57','withdraw'),(73,7,30.00,'2025-01-30 12:48:00','withdraw'),(74,7,100.00,'2025-01-30 12:48:19','withdraw'),(75,7,70.00,'2025-01-30 12:50:57','withdraw'),(76,7,60.00,'2025-01-30 12:51:01','withdraw'),(77,7,50.00,'2025-01-30 12:54:35','withdraw'),(79,9,20.00,'2025-01-30 16:31:26','withdraw');
+INSERT INTO `transactions` VALUES (55,7,0.01,'2025-01-25 01:31:38','withdraw'),(56,7,0.01,'2025-01-28 00:59:15','withdraw'),(57,7,0.01,'2025-01-29 20:39:01','withdraw'),(58,7,20.00,'2025-01-29 23:05:07','withdraw'),(59,7,40.00,'2025-01-30 00:10:21','withdraw'),(60,7,20.00,'2025-01-30 00:15:42','withdraw'),(61,7,20.00,'2025-01-30 00:17:27','withdraw'),(62,7,20.00,'2025-01-30 00:19:45','withdraw'),(63,7,20.00,'2025-01-30 00:20:54','withdraw'),(64,7,20.00,'2025-01-30 00:21:32','withdraw'),(65,7,20.00,'2025-01-30 00:23:36','withdraw'),(66,7,20.00,'2025-01-30 00:25:22','withdraw'),(67,7,20.00,'2025-01-30 00:27:47','withdraw'),(68,7,40.00,'2025-01-30 00:29:30','withdraw'),(69,7,50.00,'2025-01-30 00:29:41','withdraw'),(70,7,120.00,'2025-01-30 00:29:46','withdraw'),(71,7,120.00,'2025-01-30 12:47:54','withdraw'),(72,7,70.00,'2025-01-30 12:47:57','withdraw'),(73,7,30.00,'2025-01-30 12:48:00','withdraw'),(74,7,100.00,'2025-01-30 12:48:19','withdraw'),(75,7,70.00,'2025-01-30 12:50:57','withdraw'),(76,7,60.00,'2025-01-30 12:51:01','withdraw'),(77,7,50.00,'2025-01-30 12:54:35','withdraw'),(79,9,20.00,'2025-01-30 16:31:26','withdraw'),(80,9,-1.00,'2025-02-09 19:13:31','transfer'),(81,11,1.00,'2025-02-09 19:13:31','transfer'),(82,9,-1.00,'2025-02-16 17:42:45','transfer'),(83,11,1.00,'2025-02-16 17:42:45','transfer'),(84,9,-1.00,'2025-02-16 18:05:01','transfer'),(85,11,1.00,'2025-02-16 18:05:01','transfer'),(86,11,-1.00,'2025-02-16 18:11:54','transfer'),(87,9,1.00,'2025-02-16 18:11:54','transfer'),(88,11,-1.00,'2025-02-16 18:15:34','transfer'),(89,9,1.00,'2025-02-16 18:15:34','transfer'),(90,11,-1.00,'2025-02-16 18:30:51','transfer'),(91,9,1.00,'2025-02-16 18:30:51','transfer'),(92,7,20.00,'2025-02-16 18:52:25','withdraw'),(93,11,-1.00,'2025-02-17 22:04:12','transfer'),(94,9,1.00,'2025-02-17 22:04:12','transfer'),(95,11,-1.00,'2025-02-17 22:04:23','transfer'),(96,9,1.00,'2025-02-17 22:04:23','transfer'),(97,11,-1.00,'2025-02-17 22:07:46','transfer'),(98,9,1.00,'2025-02-17 22:07:46','transfer'),(99,11,-1.00,'2025-02-17 22:08:55','transfer'),(100,9,1.00,'2025-02-17 22:08:55','transfer'),(101,11,-1.00,'2025-02-17 22:14:44','transfer'),(102,9,1.00,'2025-02-17 22:14:44','transfer'),(103,11,-1.00,'2025-02-17 22:20:51','transfer'),(104,9,1.00,'2025-02-17 22:20:51','transfer'),(105,11,-1.00,'2025-02-17 22:21:32','transfer'),(106,9,1.00,'2025-02-17 22:21:32','transfer'),(107,11,-1.00,'2025-02-17 22:24:23','transfer'),(108,9,1.00,'2025-02-17 22:24:23','transfer'),(109,11,-1.00,'2025-02-17 22:26:52','transfer'),(110,9,1.00,'2025-02-17 22:26:52','transfer'),(111,11,-1.00,'2025-02-17 22:28:15','transfer'),(112,9,1.00,'2025-02-17 22:28:15','transfer');
 /*!40000 ALTER TABLE `transactions` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Dumping events for database 'atm_automat'
---
-
---
 -- Dumping routines for database 'atm_automat'
 --
+/*!50003 DROP PROCEDURE IF EXISTS `ExecuteTransfer` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ExecuteTransfer`(
+    IN sender_account VARCHAR(20),
+    IN receiver_account VARCHAR(20),
+    IN transfer_amount DECIMAL(10,2)
+)
+BEGIN
+    DECLARE sender_balance DECIMAL(10,2);
+    DECLARE sender_credit_limit DECIMAL(10,2);
+    DECLARE success_sender INT DEFAULT 0;
+    DECLARE success_receiver INT DEFAULT 0;
+    DECLARE sender_account_id INT;
+    DECLARE receiver_account_id INT;
+
+    START TRANSACTION;
+
+    -- Haetaan lähettäjän saldo ja tilin ID
+    SELECT idaccount, balance 
+    INTO sender_account_id, sender_balance
+    FROM accounts 
+    WHERE accountiban = sender_account;
+
+    -- Jos lähettäjää ei löydy, virhe
+    IF sender_account_id IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Lähettäjän tiliä ei löydy!';
+        SELECT * FROM account WHERE idaccount = senderAccount;
+    END IF;
+
+    -- Haetaan lähettäjän luottoraja
+    SELECT credit_limit INTO sender_credit_limit
+    FROM accounts
+    WHERE idaccount = sender_account_id;
+
+    -- Tarkistetaan, että vastaanottaja on olemassa
+    SELECT idaccount INTO receiver_account_id
+    FROM accounts 
+    WHERE accountiban = receiver_account;
+
+    -- Jos vastaanottajaa ei löydy, virhe
+    IF receiver_account_id IS NULL THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Vastaanottajan tiliä ei löydy!';
+    END IF;
+
+    -- Tarkistetaan, onko saldoa tarpeeksi tai luottoraja riittävä
+    IF (sender_balance - transfer_amount >= -IFNULL(sender_credit_limit, 0)) THEN
+        
+		-- Vähennetään summa lähettäjän tililtä
+        UPDATE accounts 
+        SET balance = balance - transfer_amount 
+        WHERE idaccount = sender_account_id;
+        SET success_sender = ROW_COUNT();
+
+        -- Lisätään summa vastaanottajan tilille
+        UPDATE accounts 
+        SET balance = balance + transfer_amount 
+        WHERE idaccount = receiver_account_id;
+        SET success_receiver = ROW_COUNT();
+
+        -- Varmistetaan, että molemmat päivitykset onnistuivat ja tallennetaan tapahtumat
+        IF (success_sender > 0 AND success_receiver > 0) THEN
+			-- Lähettäjän tapahtuma
+			INSERT INTO transactions (account_id, amount, transaction_date, transaction_type) 
+			VALUES (sender_account_id, -transfer_amount, NOW(), 'transfer');
+
+			-- Vastaanottajan tapahtuma
+			INSERT INTO transactions (account_id, amount, transaction_date, transaction_type) 
+			VALUES (receiver_account_id, transfer_amount, NOW(), 'transfer');
+
+            COMMIT;
+        ELSE
+            -- Perutaan transaktio, jos jokin meni pieleen
+            ROLLBACK;
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Tilisiirto epäonnistui';
+        END IF;
+
+    ELSE
+        -- Jos tilin saldo + credit-limiitti ei riitä, perutaan transaktio
+        ROLLBACK;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Tilin saldo ei ole riittävä';
+    END IF;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 DROP PROCEDURE IF EXISTS `GetAccountType` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
@@ -304,4 +376,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-30 19:16:54
+-- Dump completed on 2025-02-17 22:46:18
