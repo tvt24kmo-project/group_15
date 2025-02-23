@@ -3,7 +3,9 @@
 
 #include <QDialog>
 #include "accountdata.h"
+#include <QCloseEvent>
 
+class login;
 namespace Ui {
 class DebitOrCredit;
 }
@@ -34,6 +36,9 @@ private:
     QNetworkAccessManager *getManager;
     QNetworkReply *reply;
     QByteArray response_data;
+
+protected:
+    void closeEvent(QCloseEvent *event) override;
 };
 
 #endif // DEBITORCREDIT_H

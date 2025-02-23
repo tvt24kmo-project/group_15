@@ -183,32 +183,39 @@ void WithdrawCash::sendWithdrawRequest(int amount)
 }
 
 
-
+// muutos: jos tilillä ei ole tarpeeksi rahaa, se lähettää 400 koodin mikä olisi ollut network error, joten nyt käsitellään kaikki koodit
 void WithdrawCash::handleWithdrawResponse(QNetworkReply *reply)
 {
     QByteArray response_data = reply->readAll();
     qDebug() << "Withdraw response:" << response_data;
 
-    if (reply->error() != QNetworkReply::NoError) {
-        QErrorMessage errorMessage(this);
-        errorMessage.showMessage("Network error: " + reply->errorString());
-    } else {
-        QJsonDocument jsonDoc = QJsonDocument::fromJson(response_data);
-        if (jsonDoc.isNull()) {
-            QErrorMessage errorMessage(this);
-            errorMessage.showMessage("Invalid response from server.");
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(response_data);
+    if (!jsonDoc.isNull()) {
+        QJsonObject jsonObj = jsonDoc.object();
+        qDebug() << "Response JSON:" << jsonObj;
+        
+        QString error = jsonObj["error"].toString();
+        if (!error.isEmpty()) {
+            QErrorMessage *errorMessage = new QErrorMessage(this);
+            if (error == "Insufficient funds.") {
+                errorMessage->showMessage("Tilillä ei ole riittävästi katetta nostoa varten.");
+            } else {
+                errorMessage->showMessage("Nosto epäonnistui: " + error);
+            }
             return;
         }
 
-        QJsonObject jsonObj = jsonDoc.object();
-        qDebug() << "Response JSON:" << jsonObj;
         QString message = jsonObj["message"].toString();
-        
         if (message == "Withdrawal successful.") {
             QMessageBox::information(this, "Success", "Nosto onnistui!");
         } else {
-            QErrorMessage errorMessage(this);
-            errorMessage.showMessage("Withdrawal failed: " + message);
+            QErrorMessage *errorMessage = new QErrorMessage(this);
+            errorMessage->showMessage("Nosto epäonnistui: " + message);
+        }
+    } else {
+        if (reply->error() != QNetworkReply::NoError) {
+            QErrorMessage *errorMessage = new QErrorMessage(this);
+            errorMessage->showMessage("Verkkovirhe: " + reply->errorString());
         }
     }
 

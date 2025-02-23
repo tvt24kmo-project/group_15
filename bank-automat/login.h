@@ -20,7 +20,8 @@ class login : public QDialog
 public:
     explicit login(QWidget *parent = nullptr);
     ~login();
-     void onWindowFinished();
+    void clearLoginFields();
+    void onWindowFinished();
 private slots:
     void loginSlot(QNetworkReply *reply);
     void on_btnLogin_clicked();

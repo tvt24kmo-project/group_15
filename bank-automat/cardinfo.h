@@ -1,12 +1,15 @@
 #ifndef CARDINFO_H
 #define CARDINFO_H
 
-
-#include "qdialog.h"
+#include <QDialog>
 #include <QTimer>
+#include <QMainWindow>
+#include <QCloseEvent>
 #include "accountdata.h"
 #include "imagefetcher.h"
 
+// Forward declaraatio login luokasta jotta voidaan käyttää sitä parentWidgetinä closeEventissä ja on_btnClose_clickedissä 
+class login;
 namespace Ui {
 class cardInfo;
 }
@@ -50,6 +53,9 @@ private:
     ImageFetcher *imageFetcher;
     int customerID;
     void fetchFullName(int customerId);
+
+protected:
+    void closeEvent(QCloseEvent *event) override;
 };
 
 #endif // CARDINFO_H
