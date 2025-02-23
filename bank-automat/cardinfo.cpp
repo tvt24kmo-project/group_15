@@ -169,6 +169,11 @@ void cardInfo::on_buttonWithdrawCash_clicked()
 void cardInfo::on_btnTransfer_clicked()
 {
     timeoutTimer->stop(); // pysäytä ajastin
+
+    accountDataPtr->setUsername(username); // ladataan "hiljaa" käyttäjän tiedot
+    accountDataPtr->setMyToken(myToken);
+    accountDataPtr->fetchData();
+    
     // Tilisiirrot-nappia painettu
     Transfer *objTransfer = new Transfer(this);
 
