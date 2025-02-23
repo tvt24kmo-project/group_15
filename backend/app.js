@@ -64,7 +64,7 @@ function authenticateToken(req, res, next) {
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/cards', cardsRouter);
-app.use(authenticateToken); // KOMMENTOI TÄMÄ RIVI POIS JOS HALUAT TESTATA ILMAN KIRJAUTUMISTA
+// app.use(authenticateToken); // KOMMENTOI TÄMÄ RIVI POIS JOS HALUAT TESTATA ILMAN KIRJAUTUMISTA
 app.use('/customers', usersRouter);
 app.use('/transactions', transactionsRouter);
 app.use('/accounts', accountsRouter);

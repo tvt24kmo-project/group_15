@@ -53,7 +53,7 @@ router.post('/transfer', function (req, res) {
         }
         res.json({ message: 'Transfer successful.' }); // jos ei tullut virheitä niin palautetaan onnistunut viesti
     });
-});
+})
 
 
 router.post('/getAccountType', function (req, res) {

@@ -9,7 +9,7 @@ Transfer::Transfer(QWidget *parent)
 
     // Luo ajastin ikkunalle
     timeoutTimer = new QTimer(this);
-    timeoutTimer->setInterval(10000);
+    timeoutTimer->setInterval(30000);
     timeoutTimer->start();
     // Kun aikakatkaisu tapahtuu, tämä ikkuna sulkeutuu
     connect(timeoutTimer, &QTimer::timeout, this, &Transfer::close);
@@ -47,8 +47,11 @@ void Transfer::on_btnCompleteTransfer_clicked() {
         return;
     } else {
         // Kun kaikki on kunnossa, tehdään siirto
-        QString senderAccount = QString::number(myAccountDataObject->getAccountId());
+        QString senderAccount = (myAccountDataObject->getAccountIban());
         sendTransferRequest(senderAccount, receiverAccount, transferAmount);
+        ui->labelTransferInfo->setText("Tilisiirto suoritettu onnistuneesti!");
+        ui->lineTransferAmount->setText(""); // nollataan kenttä
+        ui->lineReceiver->setText(""); // nollataan kenttä
     }
 }
 
@@ -56,6 +59,7 @@ void Transfer::sendTransferRequest(const QString &senderAccount, const QString &
     QJsonObject jsonObj;
     QNetworkRequest request(transferUrl);
     request.setRawHeader("Authorization", myAccountDataObject->getMyToken());
+    timeoutTimer->start();  // Käynnistetään ajastin uudelleen
 
     // Varmistetaan, että myAccountDataObject on olemassa ja että sen tilitiedot saadaan haettua
     if (myAccountDataObject) {
@@ -106,7 +110,13 @@ void Transfer::sendTransferRequest(const QString &senderAccount, const QString &
             }
         } else {
             qDebug() << "Virhe: " << reply->errorString();  // Virheilmoitus
-            ui->labelTransferInfo->setText("Siirto epäonnistui: " + reply->errorString());
+            // Tarkistetaan, onko virhekoodi 400 (Bad Request)
+            if (reply->error() == QNetworkReply::ProtocolInvalidOperationError ||
+                reply->error() == QNetworkReply::ContentOperationNotPermittedError) {
+                ui->labelTransferInfo->setText("Väärä tilinumero");
+            } else {
+                ui->labelTransferInfo->setText("Siirto epäonnistui: " + reply->errorString());
+            }
         }
         reply->deleteLater();
     });
