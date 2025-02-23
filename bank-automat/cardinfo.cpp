@@ -169,8 +169,17 @@ void cardInfo::on_buttonWithdrawCash_clicked()
 void cardInfo::on_btnTransfer_clicked()
 {
     timeoutTimer->stop(); // pysäytä ajastin
+
+    accountDataPtr->setUsername(username); // ladataan "hiljaa" käyttäjän tiedot
+    accountDataPtr->setMyToken(myToken);
+    accountDataPtr->fetchData();
+    
     // Tilisiirrot-nappia painettu
     Transfer *objTransfer = new Transfer(this);
+
+    // Välitetään accountDataPtr Transfer-ikkunaan
+    objTransfer->setAccountDataObject(accountDataPtr);
+
     connect(objTransfer, &QDialog::finished, this, &cardInfo::onWindowFinished);
     QRect geometry = this->geometry();  // Tallenna sijainti ja koko
     objTransfer->setGeometry(geometry);

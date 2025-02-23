@@ -17,6 +17,26 @@ const procedures = {
         );
     },
 
+    transfer: function (sender_account, receiver_account, transfer_amount, callback) {
+        const amount = parseFloat(transfer_amount).toFixed(2); // Muunnetaan desimaaliksi emt auttaako
+
+        console.log("Executing SQL CALL ExecuteTransfer with:"); // debuggaukseen
+        console.log("   Sender:", sender_account);
+        console.log("   Receiver:", receiver_account);
+        console.log("   Amount:", amount); // käytetään fiksattua amounttia
+
+        db.query(
+            "CALL ExecuteTransfer(?, ?, ?);", 
+            [sender_account, receiver_account, amount], // <<- sama täällä
+            function (err, results) {
+                if (err) {
+                    console.error("-----SQL VIRHE-----:", err); // heitetään koko sql virhe ulos
+                    return callback(err, null);
+                }
+                callback(null, { message: 'Siirto onnistui' });
+            }
+        );
+    },
 
     getAccountType: function (idaccount, callback) {
         db.query(
@@ -24,6 +44,7 @@ const procedures = {
             [idaccount],
             function (err, results) {
                 if (err) {
+                    console.error("SQL error:", err.code, err.sqlMessage); // SQL Error debuggaukseen
                     return callback(err, null);
                 }
                 // `results` is an array of result sets. The second result set contains the @status value.
