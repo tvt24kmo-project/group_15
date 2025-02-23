@@ -80,10 +80,10 @@ Projektiryhmä koostuu seuraavista henkilöistä:
    * Importtaa MySQL dumppitiedosto:
      * Navigoi `Server -> Data Import`
      * Valitse `Import from Self-Contained File`
-     * Valitse `/backend/2_Dump_TESTING...sql`
+     * Valitse `/backend/FINAL_TESTINGACCOUNT.sql`
      * Valitse `atm_automat` importin kohteeksi (default target schema)
      * Importtaa dumppi
-   * `/backend/sql/TESTINGACCOUNT_INFO` tiedostossa on tietokannan dumpissa olevat kortit sekä käyttäjät ym.
+   * `/backend/sql/TESTINGACCOUNT_INFO.txt` tiedostossa on tietokannan dumpissa olevat kortit sekä käyttäjät ym.
 4. **Luo `.env` tiedosto:**
     * Luo `.env` tiedosto `backend` kansioon
     * Kopioi `env_template` tiedoston tiedot `.env` tiedostoon
